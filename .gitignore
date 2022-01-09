@@ -10,3 +10,4 @@ node_modules
 *.rest
 *.db
 documentation.md
+.vercel_build_output/
