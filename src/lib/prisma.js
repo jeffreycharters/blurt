@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
 
 export let prisma;
 if (import.meta.env.PROD) {
