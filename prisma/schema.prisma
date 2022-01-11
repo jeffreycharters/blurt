@@ -13,52 +13,24 @@ datasource db {
 model User {
   id         Int      @id @default(autoincrement())
   username   String   @unique
-  email      String   @unique
-  profile    Profile?
-  hours      Hour[]
   created_at DateTime @default(now())
+  blurts     Blurt[]
+  Lik        Lik[]
 }
 
-model Profile {
-  id     String @id @default(cuid())
+model Blurt {
+  uid    String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id])
-  userId Int    @unique
-  name   String
+  userId Int
+  blurt  String
+  liks   Lik[]
 }
 
-model Hour {
-  uid         String          @id @default(cuid())
-  owner       User            @relation(fields: [userId], references: [id])
-  userId      Int
-  task        String
-  location    Location?       @relation(fields: [locationUid], references: [uid])
-  locationUid String
-  hours       Float
-  comment     String
-  created_at  DateTime        @default(now())
-  trails      HoursOnTrails[]
-}
+model Lik {
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int
+  blurt   Blurt  @relation(fields: [blurtId], references: [uid])
+  blurtId String
 
-model Location {
-  uid    String  @id @default(cuid())
-  name   String  @unique
-  trails Trail[]
-  hours  Hour[]
-}
-
-model Trail {
-  uid         String          @id @default(cuid())
-  name        String
-  hours       HoursOnTrails[]
-  Location    Location?       @relation(fields: [locationUid], references: [uid])
-  locationUid String?
-}
-
-model HoursOnTrails {
-  trail    Trail  @relation(fields: [trailUid], references: [uid])
-  trailUid String
-  hour     Hour   @relation(fields: [hourUid], references: [uid])
-  hourUid  String
-
-  @@id([trailUid, hourUid])
+  @@id([userId, blurtId])
 }
