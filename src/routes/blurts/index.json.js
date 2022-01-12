@@ -13,7 +13,7 @@ export const get = async (request) => {
 
 // POST /locations.json
 export const post = async (request) => {
-	const response = await api(request, 'blurts', {
+	const response = await api(request, '/blurts', {
 		username: request.body.username,
 		blurt: request.body.blurt
 	});
