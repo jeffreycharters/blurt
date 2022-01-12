@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex flex-col justify-evenly items-center m-0 h-96 lg:h-full">
-	<div class="text-center bg-teal-50 rounded-md p-4">
+	<div class="text-center bg-teal-50 rounded-md py-4 w-full">
 		<h1 class="text-7xl text-teal-900" style="font-family: 'Permanent Marker';">BLURT</h1>
 
 		<h2 class="text-xs text-teal-500">An exciting <em>new</em> way to shout at the world!</h2>
