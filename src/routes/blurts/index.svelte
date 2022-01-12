@@ -10,6 +10,16 @@
 		username = localStorage.getItem('username');
 	});
 
+	const typeHandler = () => {
+		console.log('?');
+		const remaining = 14 - blurt.length;
+		const hue = (360 - 190) / remaining + 190;
+		const saturation = (100 - 60) / remaining + 60;
+		const countdownDiv = document.getElementById('countdown-box');
+		countdownDiv.style.color = `hsl(${hue}, ${saturation}%, 50%)`;
+		countdownDiv.innerHTML = remaining;
+	};
+
 	const submitHandler = async () => {
 		const response = await fetch('/blurts.json', {
 			method: 'POST',
@@ -24,7 +34,7 @@
 </script>
 
 <div class="max-w-md mx-auto">
-	<form class="flex justify-between" on:submit|preventDefault={submitHandler}>
+	<form class="flex justify-between items-baseline" on:submit|preventDefault={submitHandler}>
 		<label for="blurt" class="hidden">blurt</label>
 		<input
 			class="py-1 px-2 rounded-md border-2 border-solid border-teal-900 bg-teal-50 text-teal-800 font-semibold"
@@ -34,7 +44,9 @@
 			placeholder="blurt here"
 			autocomplete="off"
 			maxlength="14"
+			on:keyup={typeHandler}
 		/>
+		<div class="font-bold" style="color: hsl(190, 60%, 55%)" id="countdown-box">14</div>
 		<button
 			type="submit"
 			id="blurt-button"
