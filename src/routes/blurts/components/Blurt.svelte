@@ -81,8 +81,13 @@
 					<button
 						type="button"
 						on:click={likHandler}
-						class="text-teal-600 cursor-pointer border-grey-200 rounded-md border-2 px-4 shadow-md hover:shadow-sm font-bold tracking-wider"
-						>Lik</button
+						class="text-teal-600 cursor-pointer border-grey-200 rounded-md border-2 px-4 shadow-sm hover:shadow-none font-bold tracking-wider"
+						><img
+							src="heart-icon.svg"
+							alt="heart"
+							class="h-4 inline relative p-0 -ml-1 "
+							style="top: -2px;"
+						/>Lik</button
 					>
 				{/if}
 			</div>
