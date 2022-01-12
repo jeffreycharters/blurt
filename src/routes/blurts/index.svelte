@@ -11,7 +11,6 @@
 	});
 
 	const typeHandler = () => {
-		console.log('?');
 		const remaining = 14 - blurt.length;
 		const hue = (360 - 190) / remaining + 190;
 		const saturation = (100 - 60) / remaining + 60;
@@ -30,6 +29,10 @@
 			body: JSON.stringify({ username: username, blurt: blurt })
 		});
 		blurt = '';
+		console.log('what');
+		const countdownDiv = document.getElementById('countdown-box');
+		countdownDiv.style.color = `hsl(190, 60%, 50%)`;
+		countdownDiv.textContent = '14';
 	};
 </script>
 
