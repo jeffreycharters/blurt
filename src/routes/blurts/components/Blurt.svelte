@@ -85,7 +85,7 @@
 						><img
 							src="heart-icon.svg"
 							alt="heart"
-							class="h-4 inline relative p-0 -ml-1 "
+							class="h-4 inline relative p-0 -ml-1 mr-1 "
 							style="top: -2px;"
 						/>Lik</button
 					>
