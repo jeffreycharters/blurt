@@ -13,7 +13,14 @@ export async function api(request, resource, data) {
 			status = 204;
 			break;
 		case 'GET':
-			body = await prisma.location.findMany();
+			body = await prisma.blurt.findMany({
+				include: {
+					user: true
+				},
+				orderBy: {
+					created_at: 'desc'
+				}
+			});
 			status = 200;
 			break;
 		case 'PATCH':
@@ -29,9 +36,26 @@ export async function api(request, resource, data) {
 			status = 200;
 			break;
 		case 'POST':
-			body = await prisma.location.create({
+			const user = await prisma.user.findUnique({
+				where: {
+					username: data.username
+				}
+			});
+			newBlurt = await prisma.blurt.create({
 				data: {
-					name: data.name
+					userId: user.id,
+					blurt: data.blurt
+				},
+				include: {
+					user: true
+				}
+			});
+			body = await prisma.blurt.findUnique({
+				where: {
+					uid: newBlurt.uid
+				},
+				include: {
+					user: true
 				}
 			});
 			status = 201;

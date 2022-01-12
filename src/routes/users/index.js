@@ -5,8 +5,6 @@ export const get = async (request) => {
 	const response = await api(request, 'users');
 
 	if (response.status === 404) {
-		// user hasn't created a todo list.
-		// start with an empty array
 		return { body: [] };
 	}
 
