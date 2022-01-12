@@ -26,7 +26,7 @@ export const post = async (request) => {
 		headers: { Location: forward.toString() },
 		status: 302,
 		body: {
-			username: username
+			user: user
 		}
 	};
 };

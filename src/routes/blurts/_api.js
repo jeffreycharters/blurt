@@ -15,7 +15,8 @@ export async function api(request, resource, data) {
 		case 'GET':
 			body = await prisma.blurt.findMany({
 				include: {
-					user: true
+					user: true,
+					liks: true
 				},
 				orderBy: {
 					created_at: 'desc'

@@ -1,5 +1,6 @@
 <script>
 	let username = '';
+
 	const handleSubmit = async (event) => {
 		localStorage.setItem('username', username);
 		document.getElementById('login-form').submit();

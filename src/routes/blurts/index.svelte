@@ -4,7 +4,6 @@
 	import Blurt from './components/Blurt.svelte';
 
 	let blurt = '';
-
 	let username = '';
 
 	onMount(async () => {
@@ -43,11 +42,7 @@
 		>
 	</form>
 
-	{#each $blurts as blurt}
-		<Blurt>
-			<span slot="blurt">{blurt.blurt}</span>
-			<span slot="username">{blurt.user.username}</span>
-			<span slot="date">{blurt.date}</span>
-		</Blurt>
+	{#each $blurts as blurt (blurt.uid)}
+		<Blurt {blurt} />
 	{/each}
 </div>
