@@ -13,6 +13,12 @@ export const get = async (request) => {
 
 // POST /locations.json
 export const post = async (request) => {
+	if (request.body.blurt === '') {
+		return {
+			status: 200,
+			body: {}
+		};
+	}
 	const response = await api(request, '/blurts', {
 		username: request.body.username,
 		blurt: request.body.blurt

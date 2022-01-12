@@ -16,27 +16,10 @@ export async function api(request, resource, data) {
 			body = await prisma.blurt.findMany({
 				include: {
 					user: true,
-					liks: {
-						include: {
-							user: true
-						}
-					}
+					liks: true
 				},
 				orderBy: {
 					created_at: 'desc'
-				},
-				take: 3
-			});
-			status = 200;
-			break;
-		case 'PATCH':
-			body = await prisma.user.update({
-				data: {
-					done: data.done,
-					text: data.text
-				},
-				where: {
-					uid: resource.split('/').pop()
 				}
 			});
 			status = 200;
@@ -47,21 +30,10 @@ export async function api(request, resource, data) {
 					username: data.username
 				}
 			});
-			newBlurt = await prisma.blurt.create({
+			newLik = await prisma.lik.create({
 				data: {
 					userId: user.id,
-					blurt: data.blurt
-				},
-				include: {
-					user: true
-				}
-			});
-			body = await prisma.blurt.findUnique({
-				where: {
-					uid: newBlurt.uid
-				},
-				include: {
-					user: true
+					blurtId: data.uid
 				}
 			});
 			status = 201;

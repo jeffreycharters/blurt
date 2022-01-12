@@ -32,6 +32,7 @@
 			bind:value={blurt}
 			id="blurt"
 			placeholder="blurt here"
+			autocomplete="off"
 			maxlength="14"
 		/>
 		<button

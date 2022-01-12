@@ -2,6 +2,10 @@
 	let username = '';
 
 	const handleSubmit = async (event) => {
+		if (username === '') {
+			username = 'no.';
+			return;
+		}
 		localStorage.setItem('username', username);
 		document.getElementById('login-form').submit();
 	};
@@ -23,6 +27,7 @@
 				class="max-w-xs w-full py-1 px-2 rounded-md text-center text-teal-900"
 				placeholder="blazer420 is taken, sorry"
 				maxlength="14"
+				autocomplete="off"
 				bind:value={username}
 			/>
 			<button
