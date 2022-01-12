@@ -1,4 +1,7 @@
 import { writable } from 'svelte/store';
+export const blurts = writable([]);
+
+const { VITE_WEB_URL } = import.meta.env;
 
 const months = [
 	'January',
@@ -15,10 +18,8 @@ const months = [
 	'December'
 ];
 
-export const blurts = writable([]);
-
 const fetchBlurts = async () => {
-	const url = 'http://localhost:3005/blurts.json';
+	const url = `${VITE_WEB_URL}/blurts.json`;
 	const res = await fetch(url);
 	const data = await res.json();
 	const loadedBlurts = data.map((blurt) => {
