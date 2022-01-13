@@ -101,7 +101,7 @@
 				{blurt.liks.length} lik
 			</div>
 		</div>
-		<div class="text-gray-400">
+		<div class="text-gray-400 text-xs">
 			{displayDate}
 		</div>
 	</div>
