@@ -53,7 +53,7 @@
 			body: JSON.stringify({ uid: blurt.uid, username: username })
 		});
 		document.getElementById(`lik-box-${blurt.uid}`).innerHTML =
-			'<div class="text-gray-300 font-bold px-2">Likd!</div>';
+			'<div class="text-gray-300 font-bold px-4 ml-1">Likd!</div>';
 		return res;
 	};
 
@@ -81,7 +81,7 @@
 		<div class="flex gap-4 items-baseline">
 			<div id="lik-box-{blurt.uid}" class="inline">
 				{#if likdBlurt}
-					<div class="text-gray-300 font-bold px-2">u Lik!</div>
+					<div class="text-gray-300 font-bold px-4 ml-1">u Lik!</div>
 				{:else}
 					<button
 						type="button"
