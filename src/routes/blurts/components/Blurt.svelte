@@ -70,6 +70,7 @@
 		class="text-teal-500 font-bold border-b-solid border-b-2 border-b-gray-400 pl-2 tracking-wider"
 	>
 		{blurt.user.username}
+		<img src="verified.svg" alt="verified" class="h-4 inline relative" style="top: -2px;" />
 	</div>
 	<div
 		class="font-semibold text-teal-600 text-4xl pl-6 tracking-wider my-2"
