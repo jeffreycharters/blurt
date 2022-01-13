@@ -20,14 +20,17 @@
 
 	const getDisplayDate = (blurtDate, date) => {
 		const timeGap = date - blurtDate;
-		const fewSeconds = 1000 * 15;
-		const fewMinutes = 1000 * 60 * 45;
+		const fewSeconds = 1000 * 60;
+		const fewMinutes = 1000 * 60 * 15;
+		const aboutHour = 1000 * 60 * 45;
 		const oneHour = 1000 * 60 * 60;
 		const hourish = 1000 * 60 * 90;
 		const coupleHours = 1000 * 60 * 180;
 		const oneDay = 1000 * 60 * 60 * 24;
 		if (timeGap < fewSeconds) {
 			return 'A few seconds ago.';
+		} else if (timeGap < fewMinutes) {
+			return 'A few minutes ago.';
 		} else if (timeGap < fewMinutes) {
 			return 'Less than an hour ago.';
 		} else if (timeGap < hourish) {
@@ -63,7 +66,9 @@
 </script>
 
 <article class="mt-2 mb-4 py-2 px-4 border-grey-50 border-solid border-2 rounded-md {own_style}">
-	<div class="text-teal-700 font-bold border-b-solid border-b-2 border-b-gray-400 pl-2">
+	<div
+		class="text-teal-500 font-bold border-b-solid border-b-2 border-b-gray-400 pl-2 tracking-wider"
+	>
 		{blurt.user.username}
 	</div>
 	<div
@@ -72,8 +77,8 @@
 	>
 		{blurt.blurt}
 	</div>
-	<div class="flex justify-between">
-		<div class="flex gap-4">
+	<div class="flex justify-between items-baseline">
+		<div class="flex gap-4 items-baseline">
 			<div id="lik-box-{blurt.uid}" class="inline">
 				{#if likdBlurt}
 					<div class="text-gray-300 font-bold px-2">u Lik!</div>
