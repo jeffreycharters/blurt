@@ -1,12 +1,28 @@
+<script context="module">
+	import { blurts } from '../stores/blurts';
+	import { humanizeDates } from './blurts/utils';
+
+	export const load = async ({ fetch, url }) => {
+		const blurtUrl = `${url.origin}/blurts.json`;
+		const response = await fetch(blurtUrl);
+		const loadedBlurts = await response.json();
+		const readyBlurts = humanizeDates(loadedBlurts);
+		blurts.set(readyBlurts);
+		return {};
+	};
+</script>
+
 <script>
+	import LoginForm from './login/LoginForm.svelte';
 	let username = '';
 
-	const handleSubmit = async (event) => {
+	const handleSubmit = async (username) => {
 		if (username === '') {
 			username = 'no.';
 			return;
 		}
-		localStorage.setItem('username', username);
+		console.log(username);
+		localStorage.setItem('username', username.detail.username);
 		document.getElementById('login-form').submit();
 	};
 </script>
@@ -19,24 +35,6 @@
 	</div>
 
 	<div class="w-full mt-24">
-		<form action="/login" method="post" on:submit|preventDefault={handleSubmit} id="login-form">
-			<div class="text-teal-50 font-bold text-center flex flex-col gap-1">
-				Enter a name and let's blurt!
-				<input
-					type="text"
-					name="username"
-					class="max-w-xs w-full py-1 px-2 rounded-md text-center text-teal-900"
-					placeholder="blazer420 is taken, sorry"
-					maxlength="14"
-					autocomplete="off"
-					bind:value={username}
-				/>
-				<button
-					type="submit"
-					class="bg-teal-900 w-full my-1 py-1 px-2 rounded-md uppercase font-semibold tracking-widest text-sm max-w-xs"
-					style="font-family: 'Permanent Marker';">Let's Go!!</button
-				>
-			</div>
-		</form>
+		<LoginForm {username} on:loginSubmit={handleSubmit} />
 	</div>
 </div>

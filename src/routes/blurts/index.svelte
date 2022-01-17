@@ -1,13 +1,32 @@
 <script>
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { blurts } from '../../stores/blurts';
 	import Blurt from './components/Blurt.svelte';
+	import { humanizeDates } from './utils';
 
 	let blurt = '';
 	let username = '';
 
+	$: displayBlurts = $blurts;
+
+	const updateBlurts = async () => {
+		const path = $page.url.origin;
+		const url = `${path}/blurts.json`;
+		const res = await fetch(url);
+		const data = await res.json();
+		const datedBlurts = humanizeDates(data);
+		blurts.set(datedBlurts);
+	};
+
+	setInterval(updateBlurts, 2000);
+
 	onMount(async () => {
 		username = localStorage.getItem('username');
+		const res = await fetch('/blurts.json');
+		const rawBlurts = await (await res).json();
+		const dateBlurts = humanizeDates(rawBlurts);
+		blurts.set(dateBlurts);
 	});
 
 	const typeHandler = () => {
@@ -20,7 +39,7 @@
 	};
 
 	const submitHandler = async () => {
-		const response = await fetch('/blurts.json', {
+		await fetch('/blurts.json', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -60,7 +79,7 @@
 		>
 	</form>
 
-	{#each $blurts as blurt (blurt.uid)}
+	{#each displayBlurts as blurt (blurt.uid)}
 		<Blurt {blurt} />
 	{/each}
 </div>
