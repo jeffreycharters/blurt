@@ -1,7 +1,8 @@
 <script>
-	import { io } from '$lib/realtime';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import Blurt from './components/Blurt.svelte';
+	import { blurts } from '$lib/stores/blurts';
 	import { humanizeDates } from './utils';
 
 	import { crossfade } from 'svelte/transition';
@@ -9,8 +10,9 @@
 	const [send, receive] = crossfade({ duration: 200 });
 
 	let blurt = '';
-	let blurts = [];
 	let username = '';
+
+	$: displayBlurts = $blurts;
 
 	onMount(async () => {
 		username = localStorage.getItem('username');
@@ -18,18 +20,19 @@
 		const res = await fetch('/blurts.json');
 		const rawBlurts = await res.json();
 		const dateBlurts = humanizeDates(rawBlurts);
-		blurts = dateBlurts;
-
-		io.on('blurt', (newBlurt) => {
-			blurts = [newBlurt, ...blurts];
-		});
-
-		io.on('lik', (likdBlurt) => {
-			const blurtIndex = blurts.indexOf(blurts.find((b) => b.uid == likdBlurt.uid));
-			if (blurtIndex === -1) return;
-			blurts[blurtIndex].liks = likdBlurt.liks;
-		});
+		blurts.set(dateBlurts);
 	});
+
+	const getBlurts = async () => {
+		const path = $page.url.origin;
+		const url = `${path}/blurts.json`;
+		const res = await fetch(url);
+		const rawBlurts = await res.json();
+		const dateBlurts = humanizeDates(rawBlurts);
+		blurts.set(dateBlurts);
+	};
+
+	setInterval(getBlurts, 2000);
 
 	const typeHandler = () => {
 		const remaining = 14 - blurt.length;
@@ -38,11 +41,6 @@
 		const countdownDiv = document.getElementById('countdown-box');
 		countdownDiv.style.color = `hsl(${hue}, ${saturation}%, 50%)`;
 		countdownDiv.innerHTML = remaining;
-	};
-
-	const likBlurt = (e) => {
-		const likdBlurt = e.detail;
-		io.emit('lik', likdBlurt);
 	};
 
 	const submitHandler = async () => {
@@ -60,7 +58,7 @@
 		}
 		const newBlurt = await res.json();
 		newBlurt.liks = [];
-		io.emit('blurt', newBlurt);
+		blurts.set([newBlurt, ...$blurts]);
 		blurt = '';
 		const countdownDiv = document.getElementById('countdown-box');
 		countdownDiv.style.color = `hsl(190, 60%, 50%)`;
@@ -92,13 +90,13 @@
 		>
 	</form>
 
-	{#each blurts as blurt (blurt.uid)}
+	{#each displayBlurts as blurt (blurt.uid)}
 		<div
 			in:receive={{ key: blurt.id }}
 			out:send={{ key: blurt.id }}
 			animate:flip={{ duration: 200 }}
 		>
-			<Blurt {blurt} on:blurtLik={likBlurt} />
+			<Blurt {blurt} />
 		</div>
 	{/each}
 </div>

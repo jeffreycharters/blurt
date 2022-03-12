@@ -12,7 +12,7 @@
 	onMount(() => {
 		username = localStorage.getItem('username');
 		users_blurt = username === blurt.user.username;
-		likdBlurt = blurt.liks.find((l) => l.user.username === username);
+		likdBlurt = blurt.liks?.find((l) => l.user.username === username);
 		const date = new Date();
 		const blurtDate = new Date(blurt.created_at);
 		displayDate = getDisplayDate(blurtDate, date);
@@ -103,7 +103,7 @@
 				{/if}
 			</div>
 			<div class="text-teal-500 font-bold">
-				{blurt.liks.length} lik
+				{blurt.liks?.length} lik
 			</div>
 		</div>
 		<div class="text-gray-400 text-xs">
