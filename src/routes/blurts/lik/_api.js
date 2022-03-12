@@ -30,7 +30,7 @@ export async function api(request, resource, data) {
 					username: data.username
 				}
 			});
-			newLik = await prisma.lik.create({
+			await prisma.lik.create({
 				data: {
 					userId: user.id,
 					blurtId: data.uid

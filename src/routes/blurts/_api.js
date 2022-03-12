@@ -56,14 +56,7 @@ export async function api(request, resource, data) {
 					user: true
 				}
 			});
-			body = await prisma.blurt.findUnique({
-				where: {
-					uid: newBlurt.uid
-				},
-				include: {
-					user: true
-				}
-			});
+			body = newBlurt;
 			status = 201;
 			break;
 	}

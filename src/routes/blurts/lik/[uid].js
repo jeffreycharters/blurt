@@ -8,7 +8,6 @@ import { api } from './_api';
 //   })
 // }
 
-// DELETE /locations/:uid.json
 export const post = async (request) => {
 	return api(request, '', {
 		username: request.body.username,
