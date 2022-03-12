@@ -1,7 +1,5 @@
 import ioClient from 'socket.io-client';
 
-const ENDPOINT = '/';
-
-const socket = ioClient(ENDPOINT);
+const socket = ioClient();
 
 export const io = socket;
