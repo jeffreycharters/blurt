@@ -47,7 +47,7 @@ export async function api(request, resource, data) {
 					username: data.username
 				}
 			});
-			newBlurt = await prisma.blurt.create({
+			const newBlurt = await prisma.blurt.create({
 				data: {
 					userId: user.id,
 					blurt: data.blurt
