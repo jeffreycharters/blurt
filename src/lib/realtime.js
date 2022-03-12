@@ -1,6 +1,6 @@
 import ioClient from 'socket.io-client';
 
-const ENDPOINT = '/';
+const ENDPOINT = 'https://letsblurt.duckdns.org:3005/';
 
 const socket = ioClient(ENDPOINT);
 
