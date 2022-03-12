@@ -1,28 +1,10 @@
-<script context="module">
-	import { blurts } from '../stores/blurts';
-	import { humanizeDates } from './blurts/utils';
-
-	export const load = async ({ fetch, url }) => {
-		const blurtUrl = `${url.origin}/blurts.json`;
-		const response = await fetch(blurtUrl);
-		const loadedBlurts = await response.json();
-		const readyBlurts = humanizeDates(loadedBlurts);
-		blurts.set(readyBlurts);
-		return {};
-	};
-</script>
-
 <script>
 	import LoginForm from './login/LoginForm.svelte';
 	let username = '';
 
 	const handleSubmit = async (username) => {
-		if (username === '') {
-			username = 'no.';
-			return;
-		}
-		console.log(username);
-		localStorage.setItem('username', username.detail.username);
+		if (username.detail === '') username.detail = 'h4x0r';
+		localStorage.setItem('username', username.detail);
 		document.getElementById('login-form').submit();
 	};
 </script>

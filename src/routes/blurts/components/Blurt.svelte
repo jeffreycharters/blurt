@@ -1,28 +1,29 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
 	export let blurt;
 	let users_blurt = false;
 	let username = '';
-	let userid = -1;
 	let likdBlurt = false;
 	let displayDate = '';
 
+	const dispatch = createEventDispatcher();
+
 	onMount(() => {
 		username = localStorage.getItem('username');
-		userid = localStorage.getItem('id');
 		users_blurt = username === blurt.user.username;
-		likdBlurt = !!checkBlurtLiks(blurt);
+		likdBlurt = blurt.liks.find((l) => l.user.username === username);
 		const date = new Date();
 		const blurtDate = new Date(blurt.created_at);
 		displayDate = getDisplayDate(blurtDate, date);
 	});
-	$: own_style = users_blurt ? 'bg-teal-50' : '';
+	$: own_style = users_blurt ? 'bg-teal-50' : 'bg-white';
 
 	const getDisplayDate = (blurtDate, date) => {
 		const timeGap = date - blurtDate;
 		const fewSeconds = 1000 * 60;
 		const fewMinutes = 1000 * 60 * 15;
-		const aboutHour = 1000 * 60 * 45;
+		// const aboutHour = 1000 * 60 * 45;
 		const oneHour = 1000 * 60 * 60;
 		const hourish = 1000 * 60 * 90;
 		const coupleHours = 1000 * 60 * 180;
@@ -52,22 +53,17 @@
 			},
 			body: JSON.stringify({ uid: blurt.uid, username: username })
 		});
-		document.getElementById(`lik-box-${blurt.uid}`).innerHTML =
-			'<div class="text-gray-300 font-bold px-4 ml-1">Likd!</div>';
+		if (!res.ok) return console.log('fix this later');
+		const likdBlurtObj = await res.json();
+		dispatch('blurtLik', likdBlurtObj);
+		likdBlurt = true;
 		return res;
-	};
-
-	const checkBlurtLiks = (blurt) => {
-		if (blurt.liks.length > 0) {
-			return blurt.liks.find((lik) => lik.user.username === username);
-		}
-		return false;
 	};
 </script>
 
-<article class="mt-2 mb-4 py-2 px-4 border-grey-50 border-solid border-2 rounded-md {own_style}">
+<article class="mt-2 mb-4 py-2 px-4 border-grey-50 border-solid border rounded-md {own_style}">
 	<div
-		class="text-teal-500 font-bold border-b-solid border-b-2 border-b-gray-400 pl-2 tracking-wider"
+		class="text-teal-500 font-bold border-b-solid border-b border-b-gray-400 pl-2 tracking-wider pb-1"
 	>
 		{blurt.user.username}
 		<img src="verified.svg" alt="verified" class="h-4 inline relative" style="top: -2px;" />
@@ -82,12 +78,21 @@
 		<div class="flex gap-4 items-baseline">
 			<div id="lik-box-{blurt.uid}" class="inline">
 				{#if likdBlurt}
-					<div class="text-gray-300 font-bold px-4 ml-1">u Lik!</div>
+					<div
+						class="border-grey-200 rounded-md border px-4 shadow-sm hover:shadow-none font-bold tracking-wider bg-gray-50 text-slate-400 w-24 grayscale-[50%]"
+					>
+						<img
+							src="heart-icon.svg"
+							alt="heart"
+							class="h-4 inline relative p-0 -ml-1 mr-1"
+							style="top: -2px;"
+						/>Likd!
+					</div>
 				{:else}
 					<button
 						type="button"
 						on:click={likHandler}
-						class="text-teal-600 cursor-pointer border-grey-200 rounded-md border-2 px-4 shadow-sm hover:shadow-none font-bold tracking-wider"
+						class="text-teal-600 cursor-pointer border-grey-200 rounded-md border px-4 shadow-sm hover:shadow-none font-bold tracking-wider w-24 bg-white"
 						><img
 							src="heart-icon.svg"
 							alt="heart"

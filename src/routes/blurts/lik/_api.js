@@ -37,6 +37,16 @@ export async function api(request, resource, data) {
 				}
 			});
 			status = 201;
+			let likdBlurt = await prisma.blurt.findUnique({
+				where: {
+					uid: data.uid
+				},
+				include: {
+					user: true,
+					liks: true
+				}
+			});
+			body = likdBlurt;
 			break;
 	}
 

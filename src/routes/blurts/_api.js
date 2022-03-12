@@ -25,7 +25,7 @@ export async function api(request, resource, data) {
 				orderBy: {
 					created_at: 'desc'
 				},
-				take: 250
+				take: 3
 			});
 			status = 200;
 			break;

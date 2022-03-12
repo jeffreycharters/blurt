@@ -10,7 +10,7 @@ import { api } from './_api';
 
 // DELETE /locations/:uid.json
 export const post = async (request) => {
-	return api(request, `locations/${request.params.uid}`, {
+	return api(request, '', {
 		username: request.body.username,
 		uid: request.body.uid
 	});

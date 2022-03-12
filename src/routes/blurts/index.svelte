@@ -1,32 +1,34 @@
 <script>
+	import { io } from '$lib/realtime';
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
-	import { blurts } from '../../stores/blurts';
 	import Blurt from './components/Blurt.svelte';
 	import { humanizeDates } from './utils';
 
+	import { crossfade } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+	const [send, receive] = crossfade({ duration: 200 });
+
 	let blurt = '';
+	let blurts = [];
 	let username = '';
-
-	$: displayBlurts = $blurts;
-
-	const updateBlurts = async () => {
-		const path = $page.url.origin;
-		const url = `${path}/blurts.json`;
-		const res = await fetch(url);
-		const data = await res.json();
-		const datedBlurts = humanizeDates(data);
-		blurts.set(datedBlurts);
-	};
-
-	setInterval(updateBlurts, 2000);
 
 	onMount(async () => {
 		username = localStorage.getItem('username');
+		if (!username) location.href = '/';
 		const res = await fetch('/blurts.json');
-		const rawBlurts = await (await res).json();
+		const rawBlurts = await res.json();
 		const dateBlurts = humanizeDates(rawBlurts);
-		blurts.set(dateBlurts);
+		blurts = dateBlurts;
+
+		io.on('blurt', (newBlurt) => {
+			blurts = [newBlurt, ...blurts];
+		});
+
+		io.on('lik', (likdBlurt) => {
+			const blurtIndex = blurts.indexOf(blurts.find((b) => b.uid == likdBlurt.uid));
+			if (blurtIndex === -1) return;
+			blurts[blurtIndex].liks = likdBlurt.liks;
+		});
 	});
 
 	const typeHandler = () => {
@@ -38,8 +40,13 @@
 		countdownDiv.innerHTML = remaining;
 	};
 
+	const likBlurt = (e) => {
+		const likdBlurt = e.detail;
+		io.emit('lik', likdBlurt);
+	};
+
 	const submitHandler = async () => {
-		await fetch('/blurts.json', {
+		const res = await fetch('/blurts.json', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -47,8 +54,14 @@
 			},
 			body: JSON.stringify({ username: username, blurt: blurt })
 		});
+		if (!res.ok) {
+			console.log('error saving blurt');
+			return;
+		}
+		const newBlurt = await res.json();
+		newBlurt.liks = [];
+		io.emit('blurt', newBlurt);
 		blurt = '';
-		console.log('what');
 		const countdownDiv = document.getElementById('countdown-box');
 		countdownDiv.style.color = `hsl(190, 60%, 50%)`;
 		countdownDiv.textContent = '14';
@@ -60,7 +73,7 @@
 		<label for="blurt" class="hidden">blurt</label>
 		<div class="flex items-baseline gap-2">
 			<input
-				class="py-1 px-2 rounded-md border-2 border-solid border-teal-900 bg-teal-50 text-teal-800 font-semibold w-40"
+				class="py-1 px-2 rounded-md border border-solid border-teal-900 bg-teal-50 text-teal-800 font-semibold w-40"
 				type="text"
 				bind:value={blurt}
 				id="blurt"
@@ -74,12 +87,18 @@
 		<button
 			type="submit"
 			id="blurt-button"
-			class="border-2 border-solid border-gray-200 py-1 px-2 rounded-md font-semibold text-teal-50 bg-teal-600"
+			class="border border-solid border-gray-900 py-1 px-2 rounded-md font-semibold text-white bg-teal-600"
 			>blurt it</button
 		>
 	</form>
 
-	{#each displayBlurts as blurt (blurt.uid)}
-		<Blurt {blurt} />
+	{#each blurts as blurt (blurt.uid)}
+		<div
+			in:receive={{ key: blurt.id }}
+			out:send={{ key: blurt.id }}
+			animate:flip={{ duration: 200 }}
+		>
+			<Blurt {blurt} on:blurtLik={likBlurt} />
+		</div>
 	{/each}
 </div>

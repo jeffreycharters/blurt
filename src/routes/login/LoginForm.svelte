@@ -6,7 +6,7 @@
 	let dispatch = createEventDispatcher();
 
 	const handleSubmit = () => {
-		dispatch('loginSubmit', { username });
+		dispatch('loginSubmit', username);
 	};
 </script>
 
