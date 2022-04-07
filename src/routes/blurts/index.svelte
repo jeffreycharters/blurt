@@ -64,6 +64,26 @@
 		countdownDiv.style.color = `hsl(190, 60%, 50%)`;
 		countdownDiv.textContent = '14';
 	};
+
+	const getElementParentWithClassname = (el, className) => {
+		while (!el.classList.contains(className)) {
+			el = el.parentNode;
+		}
+		return el;
+	};
+
+	const touchHandler = (e) => {
+		let blurtDiv = e.target;
+		const parentDiv = getElementParentWithClassname(blurtDiv, 'blurt-holder');
+		parentDiv.style.transform = 'scaleX(0.98)';
+	};
+
+	const touchEndHandler = (e) => {
+		let blurtDiv = e.target;
+		const parentDiv = getElementParentWithClassname(blurtDiv, 'blurt-holder');
+		parentDiv.style.transform = 'scale(1)';
+		parentDiv.style.boxShadow = '';
+	};
 </script>
 
 <div class="max-w-md mx-auto">
@@ -78,6 +98,7 @@
 				placeholder="blurt here"
 				autocomplete="off"
 				maxlength="14"
+				style="will-change: transform;"
 				on:keyup={typeHandler}
 			/>
 			<div class="font-bold" style="color: hsl(190, 60%, 55%)" id="countdown-box">14</div>
@@ -85,7 +106,7 @@
 		<button
 			type="submit"
 			id="blurt-button"
-			class="border border-solid border-gray-900 py-1 px-2 rounded-md font-semibold text-white bg-teal-600"
+			class="border border-solid border-gray-900 py-1 px-4 rounded-md font-semibold text-white bg-teal-600"
 			>blurt it</button
 		>
 	</form>
@@ -95,8 +116,17 @@
 			in:receive={{ key: blurt.id }}
 			out:send={{ key: blurt.id }}
 			animate:flip={{ duration: 200 }}
+			on:touchstart={touchHandler}
+			on:touchend={touchEndHandler}
+			class="blurt-holder"
 		>
 			<Blurt {blurt} />
 		</div>
 	{/each}
 </div>
+
+<style>
+	.blurt-holder {
+		transition: all 0.05s ease-out;
+	}
+</style>
