@@ -75,7 +75,7 @@
 	const touchHandler = (e) => {
 		let blurtDiv = e.target;
 		const parentDiv = getElementParentWithClassname(blurtDiv, 'blurt-holder');
-		parentDiv.style.transform = 'scaleX(0.98)';
+		parentDiv.style.transform = 'scale(0.98)';
 	};
 
 	const touchEndHandler = (e) => {
@@ -127,6 +127,6 @@
 
 <style>
 	.blurt-holder {
-		transition: all 0.05s ease-out;
+		transition: all 0.075s cubic-bezier(0.3, 1.26, 0.71, 1.64);
 	}
 </style>
