@@ -127,6 +127,6 @@
 
 <style>
 	.blurt-holder {
-		transition: all 0.075s cubic-bezier(0.3, 1.26, 0.71, 1.64);
+		transition: all 0.075s cubic-bezier(0.17, 0.67, 0.88, 4.06);
 	}
 </style>
