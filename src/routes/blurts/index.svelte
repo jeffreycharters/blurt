@@ -6,7 +6,7 @@
 	import { humanizeDates } from './utils';
 	import { browser } from '$app/env';
 
-	import { crossfade, fly } from 'svelte/transition';
+	import { crossfade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import Loader from './components/Loader.svelte';
 	const [send, receive] = crossfade({ duration: 200 });
@@ -17,27 +17,31 @@
 
 	// need an id for this interval so we can remove it on destroy.
 	let fetchInterval = '';
+	let likInterval = '';
 
 	$: displayBlurts = $blurts;
 
 	onMount(async () => {
 		username = localStorage.getItem('username');
 		if (!username) location.href = '/';
-		const res = await fetch('/blurts.json');
+		const res = await fetch('/blurts.json?username=${username}');
 		const rawBlurts = await res.json();
 		const dateBlurts = humanizeDates(rawBlurts);
 		blurts.set(dateBlurts);
 		if (browser) fetchInterval = setInterval(getBlurts, 2000);
+		if (browser) likInterval = setInterval(updateLiks, 10 * 1000);
 	});
 
 	onDestroy(async () => {
 		clearInterval(fetchInterval);
+		clearInterval(likInterval);
 	});
 
+	const path = $page.url.origin;
+
 	const getBlurts = async () => {
-		const path = $page.url.origin;
 		const mostRecent = displayBlurts[0].created_at;
-		const url = `${path}/blurts.json?after=${mostRecent}`;
+		const url = `${path}/blurts.json?user=${username}&after=${mostRecent}`;
 		const res = await fetch(url);
 		if (res.ok) {
 			const rawBlurts = await res.json();
@@ -46,6 +50,23 @@
 				blurts.set([...dateBlurts, ...displayBlurts]);
 			}
 		}
+	};
+
+	const updateLiks = async () => {
+		console.log('updating liks');
+		const newestBlurt = encodeURIComponent(displayBlurts[0].created_at);
+		const oldestBlurt = encodeURIComponent(displayBlurts[displayBlurts.length - 1].created_at);
+		const url = `${path}/blurts/lik.json?from=${oldestBlurt}&to=${newestBlurt}`;
+		const res = await fetch(url);
+		const blurtLiks = await res.json();
+		const updatedBlurts = displayBlurts.map((b) => {
+			const blurtLik = blurtLiks.find((l) => l.uid === b.uid);
+			return {
+				...b,
+				liks: blurtLik.liks
+			};
+		});
+		blurts.set(updatedBlurts);
 	};
 
 	const typeHandler = () => {

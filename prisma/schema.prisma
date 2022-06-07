@@ -28,10 +28,11 @@ model Blurt {
 }
 
 model Lik {
-  user    User   @relation(fields: [userId], references: [id])
-  userId  Int
-  blurt   Blurt  @relation(fields: [blurtId], references: [uid])
-  blurtId String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  blurt      Blurt    @relation(fields: [blurtId], references: [uid])
+  blurtId    String
+  created_at DateTime @default(now())
 
   @@id([userId, blurtId])
 }

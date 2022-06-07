@@ -12,18 +12,29 @@ export async function api(request, resource, data) {
 			});
 			status = 204;
 			break;
+
 		case 'GET':
+			const from = request.url.searchParams.get('from');
+			const to = request.url.searchParams.get('to');
 			body = await prisma.blurt.findMany({
-				include: {
-					user: true,
+				select: {
+					uid: true,
 					liks: true
+				},
+				where: {
+					created_at: {
+						gte: from,
+						lte: to
+					}
 				},
 				orderBy: {
 					created_at: 'desc'
 				}
 			});
+
 			status = 200;
 			break;
+
 		case 'POST':
 			const user = await prisma.user.findUnique({
 				where: {
