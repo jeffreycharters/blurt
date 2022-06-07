@@ -29,7 +29,7 @@
 		const dateBlurts = humanizeDates(rawBlurts);
 		blurts.set(dateBlurts);
 		if (browser) fetchInterval = setInterval(getBlurts, 2000);
-		if (browser) likInterval = setInterval(updateLiks, 10 * 1000);
+		if (browser) likInterval = setInterval(updateLiks, 5000);
 	});
 
 	onDestroy(async () => {

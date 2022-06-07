@@ -56,8 +56,6 @@
 		if (!res.ok) {
 			console.log(res);
 		}
-		const likdBlurtObj = await res.json();
-		dispatch('blurtLik', likdBlurtObj);
 		likdBlurt = true;
 		return res;
 	};
