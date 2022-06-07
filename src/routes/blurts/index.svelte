@@ -1,9 +1,10 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import Blurt from './components/Blurt.svelte';
 	import { blurts } from '$lib/stores/blurts';
 	import { humanizeDates } from './utils';
+	import { browser } from '$app/env';
 
 	import { crossfade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
@@ -11,6 +12,9 @@
 
 	let blurt = '';
 	let username = '';
+
+	// need an id for this interval so we can remove it on destroy.
+	let fetchInterval = '';
 
 	$: displayBlurts = $blurts;
 
@@ -21,6 +25,11 @@
 		const rawBlurts = await res.json();
 		const dateBlurts = humanizeDates(rawBlurts);
 		blurts.set(dateBlurts);
+		if (browser) fetchInterval = setInterval(getBlurts, 2000);
+	});
+
+	onDestroy(async () => {
+		clearInterval(fetchInterval);
 	});
 
 	const getBlurts = async () => {
@@ -31,8 +40,6 @@
 		const dateBlurts = humanizeDates(rawBlurts);
 		blurts.set(dateBlurts);
 	};
-
-	setInterval(getBlurts, 2000);
 
 	const typeHandler = () => {
 		const remaining = 14 - blurt.length;

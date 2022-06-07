@@ -13,6 +13,8 @@ export async function api(request, resource, data) {
 			status = 204;
 			break;
 		case 'GET':
+			const params = request.url.searchParams;
+			const takeNumber = Number(params.get('take')) || 25;
 			body = await prisma.blurt.findMany({
 				include: {
 					user: true,
@@ -25,7 +27,7 @@ export async function api(request, resource, data) {
 				orderBy: {
 					created_at: 'desc'
 				},
-				take: 250
+				take: takeNumber
 			});
 			status = 200;
 			break;
