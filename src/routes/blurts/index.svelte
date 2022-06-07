@@ -6,12 +6,14 @@
 	import { humanizeDates } from './utils';
 	import { browser } from '$app/env';
 
-	import { crossfade } from 'svelte/transition';
+	import { crossfade, fly } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
+	import Loader from './components/Loader.svelte';
 	const [send, receive] = crossfade({ duration: 200 });
 
 	let blurt = '';
 	let username = '';
+	let loading = false;
 
 	// need an id for this interval so we can remove it on destroy.
 	let fetchInterval = '';
@@ -34,11 +36,16 @@
 
 	const getBlurts = async () => {
 		const path = $page.url.origin;
-		const url = `${path}/blurts.json`;
+		const mostRecent = displayBlurts[0].created_at;
+		const url = `${path}/blurts.json?after=${mostRecent}`;
 		const res = await fetch(url);
-		const rawBlurts = await res.json();
-		const dateBlurts = humanizeDates(rawBlurts);
-		blurts.set(dateBlurts);
+		if (res.ok) {
+			const rawBlurts = await res.json();
+			if (rawBlurts.length > 0) {
+				const dateBlurts = humanizeDates(rawBlurts);
+				blurts.set([...dateBlurts, ...displayBlurts]);
+			}
+		}
 	};
 
 	const typeHandler = () => {
@@ -65,7 +72,7 @@
 		}
 		const newBlurt = await res.json();
 		newBlurt.liks = [];
-		blurts.set([newBlurt, ...$blurts]);
+		blurts.set([newBlurt, ...displayBlurts]);
 		blurt = '';
 		const countdownDiv = document.getElementById('countdown-box');
 		countdownDiv.style.color = `hsl(190, 60%, 50%)`;
@@ -91,6 +98,44 @@
 		parentDiv.style.transform = 'scale(1)';
 		parentDiv.style.boxShadow = '';
 	};
+
+	// Function is called to load next set of Blurts by intersection observer.
+	const loadMoreBlurts = async (entries) => {
+		entries.forEach(async (e) => {
+			if (e.isIntersecting) {
+				console.log('loading');
+				loading = true;
+				const path = $page.url.origin;
+				const count = 25;
+				const url = `${path}/blurts.json?take=${count}&cursor=${
+					displayBlurts[displayBlurts.length - 1].uid
+				}`;
+				console.log(url);
+				const res = await fetch(url);
+				if (res.status === 404) {
+					document.getElementById('after-blurt').remove();
+					return;
+				}
+				const rawBlurts = await res.json();
+				const dateBlurts = humanizeDates(rawBlurts);
+				blurts.set([...displayBlurts, ...dateBlurts]);
+				loading = false;
+			}
+		});
+	};
+
+	if (browser) {
+		setTimeout(() => {
+			const options = {
+				root: null,
+				rootMargin: '0px 0px 0px 0px',
+				threshold: 1.0
+			};
+			let observer = new IntersectionObserver(loadMoreBlurts, options);
+			let target = document.getElementById('after-blurt');
+			observer.observe(target);
+		}, 1000);
+	}
 </script>
 
 <div class="max-w-md mx-auto">
@@ -118,18 +163,22 @@
 		>
 	</form>
 
-	{#each displayBlurts as blurt (blurt.uid)}
-		<div
-			in:receive={{ key: blurt.id }}
-			out:send={{ key: blurt.id }}
-			animate:flip={{ duration: 200 }}
-			on:touchstart={touchHandler}
-			on:touchend={touchEndHandler}
-			class="blurt-holder"
-		>
-			<Blurt {blurt} />
-		</div>
-	{/each}
+	<main id="blurt-zone">
+		{#each displayBlurts as blurt (blurt.uid)}
+			<div
+				on:touchstart={touchHandler}
+				on:touchend={touchEndHandler}
+				in:receive={{ key: blurt.id }}
+				out:send={{ key: blurt.uid }}
+				animate:flip={{ duration: 400 }}
+				class="blurt-holder"
+			>
+				<Blurt {blurt} />
+			</div>
+		{/each}
+		<Loader showing={loading} />
+	</main>
+	<div id="after-blurt" />
 </div>
 
 <style>

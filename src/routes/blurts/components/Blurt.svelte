@@ -53,7 +53,9 @@
 			},
 			body: JSON.stringify({ uid: blurt.uid, username: username })
 		});
-		if (!res.ok) return console.log('fix this later');
+		if (!res.ok) {
+			console.log(res);
+		}
 		const likdBlurtObj = await res.json();
 		dispatch('blurtLik', likdBlurtObj);
 		likdBlurt = true;

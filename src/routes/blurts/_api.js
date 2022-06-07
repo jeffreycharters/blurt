@@ -12,25 +12,72 @@ export async function api(request, resource, data) {
 			});
 			status = 204;
 			break;
+
 		case 'GET':
 			const params = request.url.searchParams;
 			const takeNumber = Number(params.get('take')) || 25;
-			body = await prisma.blurt.findMany({
-				include: {
-					user: true,
-					liks: {
-						include: {
-							user: true
+			const cursorUid = params.get('cursor');
+			const afterTime = params.get('after');
+			if (!cursorUid && !afterTime) {
+				body = await prisma.blurt.findMany({
+					include: {
+						user: true,
+						liks: {
+							include: {
+								user: true
+							}
+						}
+					},
+					orderBy: {
+						created_at: 'desc'
+					},
+					take: takeNumber
+				});
+			} else if (cursorUid) {
+				body = await prisma.blurt.findMany({
+					cursor: {
+						uid: cursorUid
+					},
+					skip: 1,
+					include: {
+						user: true,
+						liks: {
+							include: {
+								user: true
+							}
+						}
+					},
+					orderBy: {
+						created_at: 'desc'
+					},
+					take: takeNumber
+				});
+			} else if (afterTime) {
+				body = await prisma.blurt.findMany({
+					include: {
+						user: true,
+						liks: {
+							include: {
+								user: true
+							}
+						}
+					},
+					orderBy: {
+						created_at: 'desc'
+					},
+					where: {
+						created_at: {
+							gt: afterTime
 						}
 					}
-				},
-				orderBy: {
-					created_at: 'desc'
-				},
-				take: takeNumber
-			});
+				});
+			}
 			status = 200;
+			if (body.length === 0) {
+				status = 404;
+			}
 			break;
+
 		case 'PATCH':
 			body = await prisma.user.update({
 				data: {
