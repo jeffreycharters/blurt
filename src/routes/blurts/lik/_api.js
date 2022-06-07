@@ -19,7 +19,11 @@ export async function api(request, resource, data) {
 			body = await prisma.blurt.findMany({
 				select: {
 					uid: true,
-					liks: true
+					_count: {
+						select: {
+							liks: true
+						}
+					}
 				},
 				where: {
 					created_at: {

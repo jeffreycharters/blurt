@@ -1,18 +1,18 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	export let blurt;
 	let users_blurt = false;
 	let username = '';
-	let likdBlurt = false;
-	let displayDate = '';
+	let likdBlurt = blurt.userLikd;
+	$: blurtLiks = blurt._count?.liks ?? 0;
+	let error = '';
 
-	const dispatch = createEventDispatcher();
+	let displayDate = '';
 
 	onMount(() => {
 		username = localStorage.getItem('username');
 		users_blurt = username === blurt.user.username;
-		likdBlurt = blurt.liks?.find((l) => l.user.username === username);
 		const date = new Date();
 		const blurtDate = new Date(blurt.created_at);
 		displayDate = getDisplayDate(blurtDate, date);
@@ -46,6 +46,8 @@
 	};
 
 	const likHandler = async () => {
+		blurtLiks += 1;
+		likdBlurt = true;
 		const res = await fetch(`/blurts/lik/${blurt.uid}`, {
 			method: 'POST',
 			headers: {
@@ -54,9 +56,11 @@
 			body: JSON.stringify({ uid: blurt.uid, username: username })
 		});
 		if (!res.ok) {
-			console.log(res);
+			likdBlurt = false;
+			blurtLiks -= 1;
+			error = 'Shit! Trouble likking! Try lik later again.';
+			setTimeout(() => (error = ''), 5000);
 		}
-		likdBlurt = true;
 		return res;
 	};
 </script>
@@ -79,6 +83,7 @@
 			<div id="lik-box-{blurt.uid}" class="inline">
 				{#if likdBlurt}
 					<div
+						transition:fade
 						class="border-grey-200 rounded-md border px-4 shadow-sm hover:shadow-none font-bold tracking-wider bg-gray-50 text-slate-400 w-24 grayscale-[50%]"
 					>
 						<img
@@ -103,11 +108,14 @@
 				{/if}
 			</div>
 			<div class="text-teal-500 font-bold">
-				{blurt.liks?.length} lik
+				{blurtLiks} lik
 			</div>
 		</div>
 		<div class="text-gray-400 text-xs">
 			{displayDate}
 		</div>
 	</div>
+	{#if error}
+		<div transition:fade class="text-sm mt-4 mx-4 text-red-600">{error}</div>
+	{/if}
 </article>

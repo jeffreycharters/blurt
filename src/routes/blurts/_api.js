@@ -2,6 +2,7 @@ import { prisma } from '$lib/prisma';
 
 export async function api(request, resource, data) {
 	let body = {};
+	let user;
 	let status = 500;
 	switch (request.method.toUpperCase()) {
 		case 'DELETE':
@@ -18,13 +19,20 @@ export async function api(request, resource, data) {
 			const takeNumber = Number(params.get('take')) || 25;
 			const cursorUid = params.get('cursor');
 			const afterTime = params.get('after');
+			const username = decodeURIComponent(params.get('username'));
+			user = await prisma.user.findUnique({
+				where: {
+					username
+				}
+			});
+			let blurts;
 			if (!cursorUid && !afterTime) {
-				body = await prisma.blurt.findMany({
+				blurts = await prisma.blurt.findMany({
 					include: {
 						user: true,
-						liks: {
-							include: {
-								user: true
+						_count: {
+							select: {
+								liks: true
 							}
 						}
 					},
@@ -34,16 +42,16 @@ export async function api(request, resource, data) {
 					take: takeNumber
 				});
 			} else if (cursorUid) {
-				body = await prisma.blurt.findMany({
+				blurts = await prisma.blurt.findMany({
 					cursor: {
 						uid: cursorUid
 					},
 					skip: 1,
 					include: {
 						user: true,
-						liks: {
-							include: {
-								user: true
+						_count: {
+							select: {
+								liks: true
 							}
 						}
 					},
@@ -53,12 +61,12 @@ export async function api(request, resource, data) {
 					take: takeNumber
 				});
 			} else if (afterTime) {
-				body = await prisma.blurt.findMany({
+				blurts = await prisma.blurt.findMany({
 					include: {
 						user: true,
-						liks: {
-							include: {
-								user: true
+						_count: {
+							select: {
+								liks: true
 							}
 						}
 					},
@@ -72,6 +80,21 @@ export async function api(request, resource, data) {
 					}
 				});
 			}
+
+			let blurtIds = blurts.map((b) => b.uid);
+			let liks = await prisma.lik.findMany({
+				where: {
+					blurtId: { in: blurtIds },
+					userId: user.id
+				}
+			});
+			body = blurts.map((b) => {
+				const foundLik = liks.find((l) => l.blurtId === b.uid);
+				return {
+					...b,
+					userLikd: !!foundLik
+				};
+			});
 			status = 200;
 			if (body.length === 0) {
 				status = 404;
@@ -91,7 +114,7 @@ export async function api(request, resource, data) {
 			status = 200;
 			break;
 		case 'POST':
-			const user = await prisma.user.findUnique({
+			user = await prisma.user.findUnique({
 				where: {
 					username: data.username
 				}
