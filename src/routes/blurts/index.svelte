@@ -9,11 +9,14 @@
 	import { crossfade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import Loader from './components/Loader.svelte';
+	import Processing from './components/Processing.svelte';
 	const [send, receive] = crossfade({ duration: 200 });
 
 	let blurt = '';
 	let username = '';
-	let loading = false;
+	let loading = false; // loading new set of Blurts via infinite scroll
+
+	let processing = false; // processing adding new Blurt
 
 	// need an id for this interval so we can remove it on destroy.
 	let fetchInterval = '';
@@ -30,7 +33,7 @@
 		blurts.set(dateBlurts);
 		if (browser) {
 			fetchInterval = setInterval(getBlurts, 2000);
-			likInterval = setInterval(updateLiks, 5000);
+			likInterval = setInterval(updateLiks, 10000);
 		}
 	});
 
@@ -83,6 +86,7 @@
 	};
 
 	const submitHandler = async () => {
+		processing = true;
 		const res = await fetch('/blurts.json', {
 			method: 'POST',
 			headers: {
@@ -93,10 +97,12 @@
 		});
 		if (!res.ok) {
 			console.log('error saving blurt');
+			processing = false;
 			return;
 		}
 		const newBlurt = await res.json();
 		newBlurt.liks = [];
+		processing = false;
 		blurts.set([newBlurt, ...displayBlurts]);
 		blurt = '';
 		const countdownDiv = document.getElementById('countdown-box');
@@ -185,6 +191,10 @@
 			>blurt it</button
 		>
 	</form>
+
+	{#if processing}
+		<Processing />
+	{/if}
 
 	<main id="blurt-zone">
 		{#each displayBlurts as blurt (blurt.uid)}
