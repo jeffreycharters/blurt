@@ -26,6 +26,6 @@ If you're fairly savvy, you can probably do this already! Clone/fork this reposi
 
 ## Stack
 
-The [actual Blurt](https://letsblurt.duckdns.org) is running in my basement behind an nginx load-balancer/reverse proxy. The front and back ends are currently written in Javascript/Sveltekit with plans to migrate it to Typescript at some point. Using and quite enjoying [prisma.io](https://prisma.io) as an ORM which interfaces with an SQLite database, since I don't really plan to have enough people use it to bother with anything bigger.
+The [actual Blurt](https://letsblurt.duckdns.org) is running in my basement behind an nginx load-balancer/reverse proxy. The front and back ends are currently written in Javascript/Sveltekit with plans to migrate it to Typescript at some point. Prettiness thanks to TailwindCSS. Using and quite enjoying [prisma.io](https://prisma.io) as an ORM which interfaces with an SQLite database, since I don't really plan to have enough people use it to bother with anything bigger.
 
 I do plan to write tests someday.
