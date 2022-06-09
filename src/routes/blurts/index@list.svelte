@@ -6,7 +6,7 @@
 	import { humanizeDates } from './utils';
 	import { browser } from '$app/env';
 
-	import { crossfade } from 'svelte/transition';
+	import { crossfade, fade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import Loader from './components/Loader.svelte';
 	import Processing from './components/Processing.svelte';
@@ -25,11 +25,26 @@
 
 	$: displayBlurts = $blurts;
 
+	const emptyBlurt = {
+		uid: 'howyagoinmayt',
+		user: {
+			username: 'Blurtbot 🤖',
+			id: 1
+		},
+		blurt: 'No blurts yet!',
+		userLikd: true,
+		created_at: new Date().toISOString(),
+		_count: {
+			liks: Math.floor(Math.random() * 1000)
+		}
+	};
+
 	onMount(async () => {
 		username = localStorage.getItem('username');
 		if (!username) location.href = '/';
 		const res = await fetch(`/blurts.json?username=${encodeURIComponent(username)}`);
-		const rawBlurts = await res.json();
+		let rawBlurts = await res.json();
+		if (rawBlurts.length === 0) rawBlurts = [emptyBlurt];
 		const dateBlurts = humanizeDates(rawBlurts);
 		blurts.set(dateBlurts);
 		setTimeout(() => (initiating = false), 500);
@@ -88,7 +103,7 @@
 	};
 
 	const submitHandler = async () => {
-		processing = true;
+		const processTimer = setTimeout(() => (processing = true), 500);
 		const res = await fetch('/blurts.json', {
 			method: 'POST',
 			headers: {
@@ -104,6 +119,7 @@
 		}
 		const newBlurt = await res.json();
 		newBlurt.liks = [];
+		clearTimeout(processTimer);
 		processing = false;
 		blurts.set([newBlurt, ...displayBlurts]);
 		blurt = '';
@@ -136,7 +152,7 @@
 	const loadMoreBlurts = async (entries) => {
 		entries.forEach(async (e) => {
 			if (e.isIntersecting) {
-				loading = true;
+				const loadTimer = setTimeout(() => (loading = true), 500);
 				const path = $page.url.origin;
 				const count = 25;
 				const url = `${path}/blurts.json?username=${encodeURIComponent(
@@ -150,6 +166,7 @@
 				const rawBlurts = await res.json();
 				const dateBlurts = humanizeDates(rawBlurts);
 				blurts.set([...displayBlurts, ...dateBlurts]);
+				clearTimeout(loadTimer);
 				loading = false;
 			}
 		});
@@ -170,7 +187,10 @@
 </script>
 
 {#if initiating}
-	<div class="bg-white absolute -top-2 bottom-0 left-0 right-0 z-50 text-center pt-8">
+	<div
+		out:fade={{ duration: 200 }}
+		class="bg-white absolute -top-2 bottom-0 left-0 right-0 z-50 text-center pt-8"
+	>
 		<Processing text="Initiating! Beep Boop..." />
 	</div>
 {/if}
