@@ -14,6 +14,7 @@
 
 	let blurt = '';
 	let username = '';
+	let initiating = true; // loading initial Blurts
 	let loading = false; // loading new set of Blurts via infinite scroll
 
 	let processing = false; // processing adding new Blurt
@@ -31,6 +32,7 @@
 		const rawBlurts = await res.json();
 		const dateBlurts = humanizeDates(rawBlurts);
 		blurts.set(dateBlurts);
+		initiating = false;
 		if (browser) {
 			fetchInterval = setInterval(getBlurts, 2000);
 			likInterval = setInterval(updateLiks, 10000);
@@ -167,7 +169,13 @@
 	}
 </script>
 
-<div class="max-w-md mx-auto">
+{#if initiating}
+	<div class="bg-white absolute -top-2 bottom-0 left-0 right-0 z-50 text-center pt-8">
+		<Processing text="Initiating! Beep Boop..." />
+	</div>
+{/if}
+
+<div class="max-w-md mx-auto my-2">
 	<form class="flex justify-between items-baseline" on:submit|preventDefault={submitHandler}>
 		<label for="blurt" class="hidden">blurt</label>
 		<div class="flex items-baseline gap-2">
@@ -193,7 +201,7 @@
 	</form>
 
 	{#if processing}
-		<Processing />
+		<Processing text="Blurting!" />
 	{/if}
 
 	<main id="blurt-zone">

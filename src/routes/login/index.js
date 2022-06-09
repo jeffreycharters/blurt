@@ -1,7 +1,7 @@
 import { prisma } from '$lib/prisma';
 
-export const post = async (request) => {
-	const { url, body } = request;
+export const post = async ({ url, request }) => {
+	const body = await request.formData();
 
 	const payload = Object.fromEntries(body);
 	const username = payload.username;

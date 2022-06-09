@@ -1,9 +1,11 @@
 import { prisma } from '$lib/prisma';
 
-export async function api(request, resource, data) {
+export async function api(event, resource, data) {
 	let body = {};
 	let user;
 	let status = 500;
+	const request = event.request;
+	const url = event.url;
 	switch (request.method.toUpperCase()) {
 		case 'DELETE':
 			await prisma.location.delete({
@@ -15,7 +17,7 @@ export async function api(request, resource, data) {
 			break;
 
 		case 'GET':
-			const params = request.url.searchParams;
+			const params = url.searchParams;
 			const takeNumber = Number(params.get('take')) || 25;
 			const cursorUid = params.get('cursor');
 			const afterTime = params.get('after');
