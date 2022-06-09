@@ -1,8 +1,10 @@
 import { prisma } from '$lib/prisma';
 
-export async function api(request, resource, data) {
+export async function api(event, resource, data) {
 	let body = {};
 	let status = 500;
+	const request = event.request;
+	const url = event.url;
 	switch (request.method.toUpperCase()) {
 		case 'DELETE':
 			await prisma.location.delete({
@@ -14,8 +16,8 @@ export async function api(request, resource, data) {
 			break;
 
 		case 'GET':
-			const from = request.url.searchParams.get('from');
-			const to = request.url.searchParams.get('to');
+			const from = url.searchParams.get('from');
+			const to = url.searchParams.get('to');
 			body = await prisma.blurt.findMany({
 				select: {
 					uid: true,

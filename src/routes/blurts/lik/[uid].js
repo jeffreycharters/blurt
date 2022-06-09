@@ -8,9 +8,10 @@ import { api } from './_api';
 //   })
 // }
 
-export const post = async (request) => {
-	return api(request, '', {
-		username: request.body.username,
-		uid: request.body.uid
+export const post = async (event) => {
+	const body = await event.request.json();
+	return api(event, '', {
+		username: body.username,
+		uid: body.uid
 	});
 };

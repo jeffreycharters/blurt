@@ -1,5 +1,6 @@
 <script>
 	import { fly } from 'svelte/transition';
+	export let text;
 </script>
 
 <div
@@ -81,5 +82,5 @@
 		</circle>
 	</svg>
 
-	Blurting!
+	<div class="whitespace-nowrap">{text}</div>
 </div>
