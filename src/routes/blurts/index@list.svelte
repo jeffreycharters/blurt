@@ -32,7 +32,7 @@
 		const rawBlurts = await res.json();
 		const dateBlurts = humanizeDates(rawBlurts);
 		blurts.set(dateBlurts);
-		initiating = false;
+		setTimeout(() => (initiating = false), 500);
 		if (browser) {
 			fetchInterval = setInterval(getBlurts, 2000);
 			likInterval = setInterval(updateLiks, 10000);
@@ -175,7 +175,7 @@
 	</div>
 {/if}
 
-<div class="max-w-md mx-auto my-2">
+<div class="max-w-md mx-auto my-2 px-2">
 	<form class="flex justify-between items-baseline" on:submit|preventDefault={submitHandler}>
 		<label for="blurt" class="hidden">blurt</label>
 		<div class="flex items-baseline gap-2">
