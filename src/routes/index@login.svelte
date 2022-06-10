@@ -10,7 +10,7 @@
 </script>
 
 <div
-	class="flex flex-col justify-between items-center bg-teal-500 px-2 rounded-lg shadow-md mt-12 mx-2 sm:max-w-4xl sm:mx-auto"
+	class="flex flex-col justify-between items-center bg-teal-500 px-2 rounded-lg shadow-md mt-2 sm:mt-6 md:mt-12 mx-2 sm:max-w-4xl sm:mx-auto"
 >
 	<div class="text-center bg-teal-50 rounded-md py-4 w-full max-w-xs mt-24 max-w-lg">
 		<h1
