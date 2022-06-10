@@ -1,15 +1,15 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import Blurt from './components/Blurt.svelte';
+	import Blurt from '$lib/blurts/Blurt.svelte';
 	import { blurts } from '$lib/stores/blurts';
 	import { humanizeDates } from './utils';
 	import { browser } from '$app/env';
 
 	import { crossfade, fade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
-	import Loader from './components/Loader.svelte';
-	import Processing from './components/Processing.svelte';
+	import Loader from '$lib/blurts/Loader.svelte';
+	import Processing from '$lib/blurts/Processing.svelte';
 	const [send, receive] = crossfade({ duration: 200 });
 
 	let blurt = '';
@@ -191,7 +191,7 @@
 		out:fade={{ duration: 200 }}
 		class="bg-white absolute -top-2 bottom-0 left-0 right-0 z-50 text-center pt-8"
 	>
-		<Processing text="Initiating! Beep Boop..." />
+		<Processing header="Initiating!" text="Beep Boop..." />
 	</div>
 {/if}
 

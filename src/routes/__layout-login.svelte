@@ -17,6 +17,4 @@
 	/>
 </svelte:head>
 
-<body class="py-2 px-2 min-w-full min-h-full bg-teal-500">
-	<slot />
-</body>
+<slot />
