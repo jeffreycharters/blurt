@@ -4,40 +4,22 @@ export async function api(request, resource, data) {
 	let body = {};
 	let status = 500;
 	switch (request.method.toUpperCase()) {
-		case 'DELETE':
-			await prisma.user.delete({
-				where: {
-					uid: resource.split('/').pop()
-				}
-			});
-			status = 200;
-			break;
 		case 'GET':
-			body = await prisma.user.findMany();
-			status = 200;
-			break;
-		case 'PATCH':
-			body = await prisma.user.update({
-				data: {
-					done: data.done,
-					text: data.text
-				},
+			generatedUserCount = await prisma.user.count({
 				where: {
-					uid: resource.split('/').pop()
+					generator: true
 				}
 			});
+			const skipCount = Math.floor(Math.random() * generatedUserCount);
+			let randomUser = await prisma.user.findMany({
+				where: {
+					generator: true
+				},
+				skip: skipCount,
+				take: 1
+			});
+			body = randomUser[0] ?? {};
 			status = 200;
-			break;
-		case 'POST':
-			body = await prisma.user.create({
-				data: {
-					created_at: new Date(),
-					username: data.username,
-					email: data.email
-				}
-			});
-			body = 'thumbs up';
-			status = 201;
 			break;
 	}
 
