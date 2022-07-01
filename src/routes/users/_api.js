@@ -5,7 +5,7 @@ export async function api(request, resource, data) {
 	let status = 500;
 	switch (request.method.toUpperCase()) {
 		case 'GET':
-			generatedUserCount = await prisma.user.count({
+			let generatedUserCount = await prisma.user.count({
 				where: {
 					generator: true
 				}
