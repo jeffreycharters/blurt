@@ -14,6 +14,7 @@ model User {
   id         Int      @id @default(autoincrement())
   username   String   @unique
   created_at DateTime @default(now())
+  generator  Boolean  @default(false)
   blurts     Blurt[]
   Lik        Lik[]
 }
