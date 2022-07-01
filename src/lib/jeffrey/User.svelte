@@ -14,7 +14,11 @@
 		element.focus();
 	};
 
+<<<<<<< HEAD
 	const updateName = async () => {
+=======
+	const updateName = async (event) => {
+>>>>>>> 0f830bfa3f665e7a830db9de463cef7d82a3a09a
 		if (user.username === username) {
 			toggleEdit();
 			return;
