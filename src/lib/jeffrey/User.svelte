@@ -71,7 +71,7 @@
 				maxlength="14"
 			/>
 		{:else}
-			<div on:click={toggleEdit}>{user.username}</div>
+			<div on:click={toggleEdit} class="whitespace-nowrap">{user.username}</div>
 		{/if}
 	</div>
 

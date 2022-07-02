@@ -29,7 +29,7 @@
 <form action="/login" method="post" on:submit|preventDefault={handleSubmit} id="login-form">
 	<div class="text-teal-50 font-bold text-center flex flex-col gap-1 sm:text-lg md:text-xl">
 		<div class="md:my-2">Enter a name and let's blurt!</div>
-		<div class="relative max-w-sm mx-auto md:max-w-md w-full">
+		<div class="relative max-w-xs mx-auto md:max-w-md w-full">
 			<input
 				type="text"
 				name="username"
@@ -39,12 +39,15 @@
 				autocomplete="off"
 				bind:value={username}
 			/>
-			<div class="absolute top-[0.125rem] right-2 text-teal-800" on:click={generator}>
+			<div
+				class="absolute top-[0.35rem] right-2 text-teal-800 sm:py-2 w-9 px-2 md:w-12 md:top-1"
+				on:click={generator}
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="icon icon-tabler icon-tabler-arrows-shuffle"
-					width="28"
-					height="28"
+					width="100%"
+					height="100%"
 					viewBox="0 0 24 24"
 					stroke-width="1.75"
 					stroke="currentColor"
