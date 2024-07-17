@@ -188,7 +188,7 @@
 
 {#if initiating}
 	<div
-		out:fade={{ duration: 200 }}
+		out:fade|global={{ duration: 200 }}
 		class="bg-white absolute -top-2 bottom-0 left-0 right-0 z-50 text-center pt-8"
 	>
 		<Processing text="Initiating! Beep Boop..." />
@@ -229,8 +229,8 @@
 			<div
 				on:touchstart={touchHandler}
 				on:touchend={touchEndHandler}
-				in:receive={{ key: blurt.id }}
-				out:send={{ key: blurt.uid }}
+				in:receive|global={{ key: blurt.id }}
+				out:send|global={{ key: blurt.uid }}
 				animate:flip={{ duration: 400 }}
 				class="blurt-holder"
 			>
