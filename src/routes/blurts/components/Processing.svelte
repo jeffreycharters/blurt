@@ -4,7 +4,7 @@
 </script>
 
 <div
-	in:fly={{ y: -20, duration: 200 }}
+	in:fly|global={{ y: -20, duration: 200 }}
 	class="flex items-center gap-4 mx-auto w-fit my-4 border border-gray-200 px-12 py-2 rounded-md text-teal-500 shadow-sm"
 >
 	<svg

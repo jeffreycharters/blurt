@@ -83,7 +83,7 @@
 			<div id="lik-box-{blurt.uid}" class="inline">
 				{#if likdBlurt}
 					<div
-						transition:fade
+						transition:fade|global
 						class="border-grey-200 rounded-md border px-4 shadow-sm hover:shadow-none font-bold tracking-wider bg-gray-50 text-slate-400 w-24 grayscale-[50%]"
 					>
 						<img
@@ -116,6 +116,6 @@
 		</div>
 	</div>
 	{#if error}
-		<div transition:fade class="text-sm mt-4 mx-4 text-red-600">{error}</div>
+		<div transition:fade|global class="text-sm mt-4 mx-4 text-red-600">{error}</div>
 	{/if}
 </article>
