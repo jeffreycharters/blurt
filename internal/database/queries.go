@@ -1,9 +1,9 @@
-package db
+package database
 
 const v1 = `
 	PRAGMA foreign_keys = ON;
 
-	CREATE TABLE IF NOT EXISTS users (
+	CREATE TABLE IF NOT EXISTS user (
 		id TEXT NOT NULL PRIMARY KEY,
 		username TEXT NOT NULL UNIQUE,
 		created TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -1,1 +1,3 @@
-// place files you want to import through the `$lib` alias in this folder.
+import { env } from "$env/dynamic/public"
+
+export const API_ADDRESS = env.PUBLIC_API_ADDRESS ?? "http://localhost:3320"

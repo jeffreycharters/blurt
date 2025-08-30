@@ -8,8 +8,6 @@ node_modules
 /.svelte-kit
 /build
 
-# Sveltekit
-public
 
 # OS
 .DS_Store
