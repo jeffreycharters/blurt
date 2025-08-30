@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+
+@font-face {
+    font-family: 'Caveat Brush';
+    font-style: 'normal';
+    font-weight: 500;
+    src: url('lib/assets/CaveatBrush.ttf')
+}
+
+
+@font-face {
+    font-family: 'Permanent Marker';
+    font-style: 'normal';
+    font-weight: 500;
+    src: url('lib/assets/PermanentMarker.ttf')
+}
+

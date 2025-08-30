@@ -1,0 +1,17 @@
+blurt {
+    id string
+    content string [max 14 chars]
+    author_id string
+    created string datestamp
+}
+
+lik {
+    user_id string
+    blurt_id string
+}
+
+user {
+    id string
+    username string [max 14 chars]
+    created string datestamp
+}
