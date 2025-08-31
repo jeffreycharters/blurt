@@ -25,14 +25,14 @@ const v1 = `
         	length("content") <= 14
     	),
 
-		FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+		FOREIGN KEY (author_id) REFERENCES user(id) ON DELETE CASCADE
 	);
 
 	CREATE TABLE IF NOT EXISTS lik (
 		user_id TEXT NOT NULL,
 		blurt_id TEXT NOT NULL,
 		PRIMARY KEY (user_id, blurt_id),
-		FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+		FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
 		FOREIGN KEY (blurt_id) REFERENCES blurt(id) ON DELETE CASCADE
 	);
 `

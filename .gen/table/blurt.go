@@ -68,7 +68,7 @@ func newBlurtTableImpl(schemaName, tableName, alias string) blurtTable {
 		CreatedColumn  = sqlite.StringColumn("created")
 		allColumns     = sqlite.ColumnList{IDColumn, ContentColumn, AuthorIDColumn, CreatedColumn}
 		mutableColumns = sqlite.ColumnList{ContentColumn, AuthorIDColumn, CreatedColumn}
-		defaultColumns = sqlite.ColumnList{CreatedColumn}
+		defaultColumns = sqlite.ColumnList{}
 	)
 
 	return blurtTable{

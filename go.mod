@@ -7,7 +7,7 @@ toolchain go1.24.2
 require (
 	github.com/go-jet/jet/v2 v2.13.0
 	github.com/gofiber/contrib/websocket v1.3.2
-	github.com/labstack/echo v3.3.10+incompatible
+	github.com/google/uuid v1.6.0
 	github.com/labstack/echo/v4 v4.13.4
 	modernc.org/sqlite v1.38.2
 )
@@ -18,7 +18,6 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fasthttp/websocket v1.5.8 // indirect
 	github.com/gofiber/fiber/v2 v2.52.5 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect

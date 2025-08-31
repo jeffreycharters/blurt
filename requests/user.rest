@@ -1,0 +1,16 @@
+http://localhost:3320/api/users/usercount
+
+###
+POST http://localhost:3320/api/users/jeffrey3
+
+###
+http://localhost:3320/api/blurts/
+
+###
+POST http://localhost:3320/api/blurts/
+content-type: application/json
+
+{
+    "username": "jeffrey",
+    "blurt": "relax guy"
+}

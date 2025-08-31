@@ -28,17 +28,15 @@ func main() {
 		Filesystem: http.FS(webAssets),
 	}))
 
-	api := e.Group("api")
+	api := e.Group("/api")
 
-	users := api.Group("users")
-	users.POST(":username", h.NewUserHandler)
+	users := api.Group("/users")
+	users.POST("/:username", h.NewUserHandler)
+	users.GET("/usercount", h.UserCountHandler)
 
-	e.GET("api/users", func(c echo.Context) error {
-		return c.String(http.StatusOK, "users")
-	})
-
-	e.POST("api/user/:username", h.NewUserHandler)
-	e.GET("api/usercount", h.UserCountHandler)
+	blurts := api.Group("/blurts")
+	blurts.GET("/", h.GetBlurtsHandler)
+	blurts.POST("/", h.NewBlurtHandler)
 
 	log.Fatal(e.Start(":3320"))
 

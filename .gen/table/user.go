@@ -66,7 +66,7 @@ func newUserTableImpl(schemaName, tableName, alias string) userTable {
 		CreatedColumn  = sqlite.StringColumn("created")
 		allColumns     = sqlite.ColumnList{IDColumn, UsernameColumn, CreatedColumn}
 		mutableColumns = sqlite.ColumnList{UsernameColumn, CreatedColumn}
-		defaultColumns = sqlite.ColumnList{CreatedColumn}
+		defaultColumns = sqlite.ColumnList{}
 	)
 
 	return userTable{
