@@ -1,8 +1,9 @@
 package database
 
 import (
-	"log/slog"
+	"time"
 
+	"github.com/go-jet/jet/v2/qrm"
 	. "github.com/go-jet/jet/v2/sqlite"
 	"github.com/google/uuid"
 	"github.com/jeffreycharters/blurt/.gen/model"
@@ -14,17 +15,34 @@ func (db *HandlerDB) GetUsers() []model.User {
 }
 
 func (db *HandlerDB) SetUser(username string) (*model.User, error) {
+	stmt := SELECT(User.AllColumns).
+		FROM(User).
+		WHERE(User.Username.EQ(String(username))).
+		LIMIT(1)
+
+	var dest struct {
+		User model.User
+	}
+
+	err := stmt.Query(db.db, &dest)
+	if err == nil {
+		return &dest.User, nil
+	}
+
+	if err != qrm.ErrNoRows {
+		return nil, err
+	}
+
 	user := model.User{
 		ID:       uuid.NewString(),
 		Username: username,
+		Created:  time.Now().Format(time.RFC3339),
 	}
 
-	stmt := User.INSERT(User.ID, User.Username).
-		MODEL(user).
-		ON_CONFLICT(User.Username).
-		DO_NOTHING()
+	insert := User.INSERT(User.ID, User.Username, User.Created).
+		MODEL(user)
 
-	if _, err := stmt.Exec(db.db); err != nil {
+	if _, err := insert.Exec(db.db); err != nil {
 		return nil, err
 	}
 
@@ -43,6 +61,5 @@ func (db *HandlerDB) GetUserCount() (int, error) {
 		return 0, err
 	}
 
-	slog.Info("got user count", "count", dest)
 	return dest.Count, nil
 }

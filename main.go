@@ -18,24 +18,28 @@ func main() {
 	db := database.Init()
 	defer db.Close()
 
-	app := echo.New()
-	app.Use(middleware.CORS())
+	e := echo.New()
+	e.Use(middleware.CORS())
 
 	h := handlers.New(db)
-	h.Routes = app
 
-	app.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		Root:       "frontend/build",
 		Filesystem: http.FS(webAssets),
 	}))
 
-	app.GET("api/users", func(c echo.Context) error {
+	api := e.Group("api")
+
+	users := api.Group("users")
+	users.POST(":username", h.NewUserHandler)
+
+	e.GET("api/users", func(c echo.Context) error {
 		return c.String(http.StatusOK, "users")
 	})
 
-	app.POST("api/user/:username", h.NewUserHandler)
-	app.GET("api/usercount", h.UserCountHandler)
+	e.POST("api/user/:username", h.NewUserHandler)
+	e.GET("api/usercount", h.UserCountHandler)
 
-	log.Fatal(app.Start(":3320"))
+	log.Fatal(e.Start(":3320"))
 
 }

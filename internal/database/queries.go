@@ -6,7 +6,7 @@ const v1 = `
 	CREATE TABLE IF NOT EXISTS user (
 		id TEXT NOT NULL PRIMARY KEY,
 		username TEXT NOT NULL UNIQUE,
-		created TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		created TEXT NOT NULL,
 
 		CHECK(
         	typeof("username") = "text" AND
@@ -18,7 +18,7 @@ const v1 = `
 		id TEXT NOT NULL PRIMARY KEY,
 		content TEXT NOT NULL,
 		author_id TEXT NOT NULL,
-		created TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		created TEXT NOT NULL,
 
 		CHECK(
         	typeof("content") = "text" AND
