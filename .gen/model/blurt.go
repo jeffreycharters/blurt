@@ -8,8 +8,8 @@
 package model
 
 type Blurt struct {
-	ID       string `sql:"primary_key"`
-	Content  string
-	AuthorID string
-	Created  string
+	ID      string `sql:"primary_key"`
+	Content string
+	Author  string
+	Created string
 }

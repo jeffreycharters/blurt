@@ -8,7 +8,6 @@
 package model
 
 type User struct {
-	ID       string `sql:"primary_key"`
-	Username string
+	Username string `sql:"primary_key"`
 	Created  string
 }

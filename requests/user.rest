@@ -4,7 +4,7 @@ http://localhost:3320/api/users/usercount
 POST http://localhost:3320/api/users/jeffrey3
 
 ###
-http://localhost:3320/api/blurts/
+http://localhost:3320/api/blurts/?offset=0&username=jeffrey
 
 ###
 POST http://localhost:3320/api/blurts/
@@ -13,4 +13,13 @@ content-type: application/json
 {
     "username": "jeffrey",
     "blurt": "relax guy"
+}
+
+###
+POST http://localhost:3320/api/liks/
+content-type: application/json
+
+{
+    "username": "jeffrey",
+    "blurt_id": "fa1801eb-8496-4360-9c03-8427323264bf"
 }

@@ -17,10 +17,10 @@ type blurtTable struct {
 	sqlite.Table
 
 	// Columns
-	ID       sqlite.ColumnString
-	Content  sqlite.ColumnString
-	AuthorID sqlite.ColumnString
-	Created  sqlite.ColumnString
+	ID      sqlite.ColumnString
+	Content sqlite.ColumnString
+	Author  sqlite.ColumnString
+	Created sqlite.ColumnString
 
 	AllColumns     sqlite.ColumnList
 	MutableColumns sqlite.ColumnList
@@ -64,10 +64,10 @@ func newBlurtTableImpl(schemaName, tableName, alias string) blurtTable {
 	var (
 		IDColumn       = sqlite.StringColumn("id")
 		ContentColumn  = sqlite.StringColumn("content")
-		AuthorIDColumn = sqlite.StringColumn("author_id")
+		AuthorColumn   = sqlite.StringColumn("author")
 		CreatedColumn  = sqlite.StringColumn("created")
-		allColumns     = sqlite.ColumnList{IDColumn, ContentColumn, AuthorIDColumn, CreatedColumn}
-		mutableColumns = sqlite.ColumnList{ContentColumn, AuthorIDColumn, CreatedColumn}
+		allColumns     = sqlite.ColumnList{IDColumn, ContentColumn, AuthorColumn, CreatedColumn}
+		mutableColumns = sqlite.ColumnList{ContentColumn, AuthorColumn, CreatedColumn}
 		defaultColumns = sqlite.ColumnList{}
 	)
 
@@ -75,10 +75,10 @@ func newBlurtTableImpl(schemaName, tableName, alias string) blurtTable {
 		Table: sqlite.NewTable(schemaName, tableName, alias, allColumns...),
 
 		//Columns
-		ID:       IDColumn,
-		Content:  ContentColumn,
-		AuthorID: AuthorIDColumn,
-		Created:  CreatedColumn,
+		ID:      IDColumn,
+		Content: ContentColumn,
+		Author:  AuthorColumn,
+		Created: CreatedColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

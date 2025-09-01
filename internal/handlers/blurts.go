@@ -29,7 +29,7 @@ func (h *DefaultHandler) NewBlurtHandler(c echo.Context) error {
 		return err
 	}
 
-	blurt, err := h.db.SetBlurt(user.ID, body.Blurt)
+	blurt, err := h.db.SetBlurt(user.Username, body.Blurt)
 	if err != nil {
 		slog.Info("error setting blurt", "error", err)
 		return err
@@ -39,7 +39,15 @@ func (h *DefaultHandler) NewBlurtHandler(c echo.Context) error {
 }
 
 func (h *DefaultHandler) GetBlurtsHandler(c echo.Context) error {
-	blurts, err := h.db.GetBlurts(0)
+	type query_params struct {
+		Username string `query:"username"`
+		Offset   int    `query:"offset"`
+	}
+
+	var params query_params
+	_ = c.Bind(&params)
+
+	blurts, err := h.db.GetBlurts(params.Username, params.Offset)
 	if err != nil {
 		slog.Info("error getting blurts", "error", err)
 		return err

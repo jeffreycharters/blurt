@@ -38,6 +38,9 @@ func main() {
 	blurts.GET("/", h.GetBlurtsHandler)
 	blurts.POST("/", h.NewBlurtHandler)
 
+	liks := api.Group("/liks")
+	liks.POST("/", h.NewLikHandler)
+
 	log.Fatal(e.Start(":3320"))
 
 }

@@ -4,8 +4,7 @@ const v1 = `
 	PRAGMA foreign_keys = ON;
 
 	CREATE TABLE IF NOT EXISTS user (
-		id TEXT NOT NULL PRIMARY KEY,
-		username TEXT NOT NULL UNIQUE,
+		username TEXT NOT NULL PRIMARY KEY,
 		created TEXT NOT NULL,
 
 		CHECK(
@@ -17,7 +16,7 @@ const v1 = `
 	CREATE TABLE IF NOT EXISTS blurt (
 		id TEXT NOT NULL PRIMARY KEY,
 		content TEXT NOT NULL,
-		author_id TEXT NOT NULL,
+		author TEXT NOT NULL,
 		created TEXT NOT NULL,
 
 		CHECK(
@@ -25,14 +24,14 @@ const v1 = `
         	length("content") <= 14
     	),
 
-		FOREIGN KEY (author_id) REFERENCES user(id) ON DELETE CASCADE
+		FOREIGN KEY (author) REFERENCES user(username) ON DELETE CASCADE
 	);
 
 	CREATE TABLE IF NOT EXISTS lik (
-		user_id TEXT NOT NULL,
+		username TEXT NOT NULL,
 		blurt_id TEXT NOT NULL,
-		PRIMARY KEY (user_id, blurt_id),
-		FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+		PRIMARY KEY (username, blurt_id),
+		FOREIGN KEY (username) REFERENCES user(username) ON DELETE CASCADE,
 		FOREIGN KEY (blurt_id) REFERENCES blurt(id) ON DELETE CASCADE
 	);
 `

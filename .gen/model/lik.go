@@ -8,6 +8,6 @@
 package model
 
 type Lik struct {
-	UserID  string `sql:"primary_key"`
-	BlurtID string `sql:"primary_key"`
+	Username string `sql:"primary_key"`
+	BlurtID  string `sql:"primary_key"`
 }

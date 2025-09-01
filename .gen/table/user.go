@@ -17,7 +17,6 @@ type userTable struct {
 	sqlite.Table
 
 	// Columns
-	ID       sqlite.ColumnString
 	Username sqlite.ColumnString
 	Created  sqlite.ColumnString
 
@@ -61,11 +60,10 @@ func newUserTable(schemaName, tableName, alias string) *UserTable {
 
 func newUserTableImpl(schemaName, tableName, alias string) userTable {
 	var (
-		IDColumn       = sqlite.StringColumn("id")
 		UsernameColumn = sqlite.StringColumn("username")
 		CreatedColumn  = sqlite.StringColumn("created")
-		allColumns     = sqlite.ColumnList{IDColumn, UsernameColumn, CreatedColumn}
-		mutableColumns = sqlite.ColumnList{UsernameColumn, CreatedColumn}
+		allColumns     = sqlite.ColumnList{UsernameColumn, CreatedColumn}
+		mutableColumns = sqlite.ColumnList{CreatedColumn}
 		defaultColumns = sqlite.ColumnList{}
 	)
 
@@ -73,7 +71,6 @@ func newUserTableImpl(schemaName, tableName, alias string) userTable {
 		Table: sqlite.NewTable(schemaName, tableName, alias, allColumns...),
 
 		//Columns
-		ID:       IDColumn,
 		Username: UsernameColumn,
 		Created:  CreatedColumn,
 

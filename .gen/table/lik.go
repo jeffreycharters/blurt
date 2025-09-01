@@ -17,8 +17,8 @@ type likTable struct {
 	sqlite.Table
 
 	// Columns
-	UserID  sqlite.ColumnString
-	BlurtID sqlite.ColumnString
+	Username sqlite.ColumnString
+	BlurtID  sqlite.ColumnString
 
 	AllColumns     sqlite.ColumnList
 	MutableColumns sqlite.ColumnList
@@ -60,9 +60,9 @@ func newLikTable(schemaName, tableName, alias string) *LikTable {
 
 func newLikTableImpl(schemaName, tableName, alias string) likTable {
 	var (
-		UserIDColumn   = sqlite.StringColumn("user_id")
+		UsernameColumn = sqlite.StringColumn("username")
 		BlurtIDColumn  = sqlite.StringColumn("blurt_id")
-		allColumns     = sqlite.ColumnList{UserIDColumn, BlurtIDColumn}
+		allColumns     = sqlite.ColumnList{UsernameColumn, BlurtIDColumn}
 		mutableColumns = sqlite.ColumnList{}
 		defaultColumns = sqlite.ColumnList{}
 	)
@@ -71,8 +71,8 @@ func newLikTableImpl(schemaName, tableName, alias string) likTable {
 		Table: sqlite.NewTable(schemaName, tableName, alias, allColumns...),
 
 		//Columns
-		UserID:  UserIDColumn,
-		BlurtID: BlurtIDColumn,
+		Username: UsernameColumn,
+		BlurtID:  BlurtIDColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

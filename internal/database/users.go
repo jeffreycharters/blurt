@@ -5,7 +5,6 @@ import (
 
 	"github.com/go-jet/jet/v2/qrm"
 	. "github.com/go-jet/jet/v2/sqlite"
-	"github.com/google/uuid"
 	"github.com/jeffreycharters/blurt/.gen/model"
 	. "github.com/jeffreycharters/blurt/.gen/table"
 )
@@ -34,12 +33,11 @@ func (db *HandlerDB) SetUser(username string) (*model.User, error) {
 	}
 
 	user := model.User{
-		ID:       uuid.NewString(),
 		Username: username,
 		Created:  time.Now().Format(time.RFC3339),
 	}
 
-	insert := User.INSERT(User.ID, User.Username, User.Created).
+	insert := User.INSERT(User.Username, User.Created).
 		MODEL(user)
 
 	if _, err := insert.Exec(db.db); err != nil {
@@ -50,7 +48,7 @@ func (db *HandlerDB) SetUser(username string) (*model.User, error) {
 }
 
 func (db *HandlerDB) GetUserCount() (int, error) {
-	stmt := SELECT(COUNT(User.ID).AS("Count")).FROM(User)
+	stmt := SELECT(COUNT(User.Username).AS("Count")).FROM(User)
 
 	var dest struct {
 		Count int
