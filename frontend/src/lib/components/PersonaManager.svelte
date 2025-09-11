@@ -56,7 +56,7 @@
 		<div class="flex gap-3">
 			<button
 				class="rounded border border-slate-400 bg-slate-200 p-[2px] shadow"
-				onclick={() => users.set_random_active()}
+				onclick={(event) => (event.stopPropagation(), users.set_random_active())}
 			>
 				<ReplaceIcon />
 			</button>
