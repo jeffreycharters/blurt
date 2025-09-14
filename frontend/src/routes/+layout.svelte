@@ -1,12 +1,11 @@
 <script lang="ts">
 	import "../app.css"
-	import favicon from "$lib/assets/favicon.svg"
+	import blurt_favicon from "$lib/assets/blurt_favicon.png"
 	import { setUserState } from "$lib/users.svelte"
 	import { fade } from "svelte/transition"
 	import { setBlurtState } from "$lib/blurts.svelte"
 	import { setChaosState } from "$lib/chaos.svelte"
 	import { setPersonaDrawerState } from "$lib/personas.svelte"
-	import { onDestroy, onMount } from "svelte"
 
 	let { children, data } = $props()
 
@@ -32,7 +31,7 @@
 
 <svelte:head>
 	<title>Blurtonamo Bay</title>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" href={blurt_favicon} />
 </svelte:head>
 
 <dialog transition:fade bind:this={dialog} class="backdrop:bg-black/50 backdrop:backdrop-blur">
