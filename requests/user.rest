@@ -12,7 +12,7 @@ content-type: application/json
 
 {
     "username": "jeffrey",
-    "blurt": "relax guy"
+    "blurt": ""
 }
 
 ###

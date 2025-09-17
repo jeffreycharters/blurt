@@ -32,6 +32,10 @@ type LikRequired struct {
 	BlurtID string `json:"blurt_id" validate:"uuid4,required"`
 }
 
+type ErrorRequired struct {
+	Message string `json:"message"`
+}
+
 type Message struct {
 	ContentType ContentType     `json:"content_type"`
 	Payload     json.RawMessage `json:"payload"`

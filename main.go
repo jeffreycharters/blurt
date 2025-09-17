@@ -43,7 +43,6 @@ func main() {
 
 	blurts := api.Group("/blurts")
 	blurts.GET("/", h.GetBlurtsHandler)
-	blurts.POST("/", h.NewBlurtHandler)
 
 	liks := api.Group("/liks")
 	liks.POST("/", h.NewLikHandler)

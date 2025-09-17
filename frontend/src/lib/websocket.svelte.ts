@@ -3,12 +3,13 @@ import type { Blurt, Blurts } from "./blurts.svelte"
 
 export enum ContentType {
     Blurt = "blurt",
-    Lik = "lik"
+    Lik = "lik",
+    Error = "error"
 }
 
 export type Message = {
     content_type: ContentType
-    payload: LikPayload | BlurtPayload | Blurt
+    payload: LikPayload | BlurtPayload | Blurt | ErrorPayload
 }
 
 type LikPayload = {
@@ -19,6 +20,10 @@ type LikPayload = {
 type BlurtPayload = {
     username: string
     blurt: string
+}
+
+type ErrorPayload = {
+    message: string
 }
 
 let websocket: WebSocket | null = $state(null)
@@ -45,6 +50,12 @@ export function get_websocket(blurts: Blurts) {
             const blurt_index = blurts.list.findIndex((blurt) => blurt.id === (lik.blurt_id))
 
             blurts.list[blurt_index].likkers = [...blurts.list[blurt_index].likkers ?? [], lik.likker]
+            return
+        }
+
+        if (message.content_type == ContentType.Error) {
+            const error = message.payload as ErrorPayload
+            console.error(error.message)
             return
         }
 
