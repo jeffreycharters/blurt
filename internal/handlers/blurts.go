@@ -7,15 +7,22 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const BLURT_COUNT = 2
+
 func (h *DefaultHandler) GetBlurtsHandler(c echo.Context) error {
 	type query_params struct {
 		Offset int `query:"offset"`
+		Count  int `query:"count"`
 	}
 
 	var params query_params
 	_ = c.Bind(&params)
 
-	blurts, err := h.db.GetBlurts(params.Offset)
+	if params.Count == 0 {
+		params.Count = BLURT_COUNT
+	}
+
+	blurts, err := h.db.GetBlurts(params.Offset, BLURT_COUNT)
 	if err != nil {
 		slog.Info("error getting blurts", "error", err)
 		return err

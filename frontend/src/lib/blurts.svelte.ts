@@ -20,6 +20,10 @@ export class Blurts {
         this.list = [blurt, ...this.list]
     }
 
+    add_bulk(blurts: Blurt[]) {
+        this.list = [...this.list, ...blurts]
+    }
+
 }
 
 const BLURT_KEY = Symbol("blurts")

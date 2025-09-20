@@ -38,7 +38,7 @@ func (db *HandlerDB) SetBlurt(username string, blurt string) (*LoadedBlurt, erro
 	return &dest.Blurt, nil
 }
 
-func (db *HandlerDB) GetBlurts(offset int) ([]LoadedBlurt, error) {
+func (db *HandlerDB) GetBlurts(offset int, count int) ([]LoadedBlurt, error) {
 	stmt := SELECT(
 		Blurt.ID.AS("loaded_blurt.id"),
 		Blurt.Content.AS("loaded_blurt.content"),
@@ -50,7 +50,7 @@ func (db *HandlerDB) GetBlurts(offset int) ([]LoadedBlurt, error) {
 		).
 		ORDER_BY(Blurt.Created.DESC()).
 		OFFSET(int64(offset)).
-		LIMIT(25)
+		LIMIT(int64(count))
 
 	var blurts []LoadedBlurt
 	err := stmt.Query(db.db, &blurts)

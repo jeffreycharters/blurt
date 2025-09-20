@@ -6,7 +6,6 @@
 	import { getUserState } from "$lib/users.svelte"
 	import { ContentType, get_websocket, type Message } from "$lib/websocket.svelte"
 	import { browser } from "$app/environment"
-
 	const blurts = getBlurtState()
 	const users = getUserState()
 

@@ -7,9 +7,7 @@ const config = {
 	// for more information about preprocessors
 	preprocess: sveltePreprocess(),
 	kit: {
-		adapter: adapter({
-			fallback: "index.html"
-		}),
+		adapter: adapter(),
 		prerender: {
 			handleHttpError: "warn"
 		}
