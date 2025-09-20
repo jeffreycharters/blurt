@@ -49,8 +49,8 @@ func (db *HandlerDB) GetBlurts(offset int, count int) ([]LoadedBlurt, error) {
 			LEFT_JOIN(Lik, Lik.BlurtID.EQ(Blurt.ID)),
 		).
 		ORDER_BY(Blurt.Created.DESC()).
-		OFFSET(int64(offset)).
-		LIMIT(int64(count))
+		LIMIT(int64(count)).
+		OFFSET(int64(offset))
 
 	var blurts []LoadedBlurt
 	err := stmt.Query(db.db, &blurts)

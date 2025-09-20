@@ -1,50 +1,39 @@
 <script lang="ts">
-	import { browser } from "$app/environment"
-	import { API_ADDRESS } from "$lib"
-	import { getBlurtState } from "$lib/blurts.svelte"
+	import { getBlurtState, type Blurt } from "$lib/blurts.svelte"
 	import { getUserState } from "$lib/users.svelte"
-	import { untrack } from "svelte"
+	import mowr from "$lib/assets/mowr.png"
+	import { API_ADDRESS } from "$lib"
 
-	const blurts = getBlurtState()
+	let more_blurts = $state(true)
+
 	const users = getUserState()
+	const blurts = getBlurtState()
 
-	let footer: HTMLDivElement
-	let loading_blurts = false
+	async function get_more_blurts() {
+		const res = await fetch(
+			`${API_ADDRESS}/blurts/?offset=${blurts.list.length}&username=${users.active_user}`
+		)
 
-	$effect(() => {
-		if (!browser) return
+		if (!res.ok) return console.error(res.status, res.statusText)
 
-		const handleIntersect: IntersectionObserverCallback = async (entries, observer) => {
-			entries.forEach((entry) => {
-				if (!entry.isIntersecting || loading_blurts) return
+		const new_blurts = (await res.json()) as Blurt[]
+		blurts.add_bulk(new_blurts)
 
-				loading_blurts = true
-
-				fetch(API_ADDRESS + `/blurts/?offset=${blurts.list.length}&username=${users.active_user}`)
-					.then((res) => res.json())
-					.then((new_blurts) => {
-						if (new_blurts.length == 0) {
-							observer.unobserve(footer)
-							loading_blurts = false
-							return
-						}
-
-						blurts.add_bulk(new_blurts)
-						loading_blurts = false
-					})
-			})
-		}
-
-		const options = { threshold: 0, rootMargin: "200px 0px 0px" }
-		new IntersectionObserver(handleIntersect, options).observe(footer)
-
-		untrack(() => blurts)
-	})
+		if (new_blurts.length === 0) more_blurts = false
+	}
 </script>
 
-<div class="mb-6 rounded-md bg-white p-4 text-center font-bold md:mb-0">
-	<div class="text-teal-500">THAT'S ALL OF THEM!!!</div>
-	<div class="text-teal-600">You win in a losing sort of way!</div>
-</div>
-
-<div bind:this={footer}></div>
+{#if more_blurts}
+	<button
+		class="mx-auto mb-16 flex w-5/6 cursor-pointer rounded bg-white py-2 shadow-lg hover:bg-teal-50 md:mb-0"
+		onclick={get_more_blurts}
+	>
+		<div class="w-full text-right" style="font-family: 'comic sans ms';">clik heer for</div>
+		<img src={mowr} alt="mowr blurts" class="ml-auto mr-0 h-16" />
+	</button>
+{:else}
+	<footer class="mb-6 rounded-md bg-white p-4 text-center font-bold md:mb-0">
+		<div class="text-teal-500">THAT'S ALL OF THEM!!!</div>
+		<div class="text-teal-600">You win in a losing sort of way!</div>
+	</footer>
+{/if}

@@ -21,8 +21,7 @@ export class Blurts {
     }
 
     add_bulk(blurts: Blurt[]) {
-        const new_list = [...this.list, ...blurts]
-        this.list = [...new Set(new_list)]
+        this.list = [...this.list, ...blurts]
     }
 
 }
