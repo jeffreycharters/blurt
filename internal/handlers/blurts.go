@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-const BLURT_COUNT = 2
+const BLURT_COUNT = 100
 
 func (h *DefaultHandler) GetBlurtsHandler(c echo.Context) error {
 	type query_params struct {

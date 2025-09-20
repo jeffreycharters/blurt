@@ -6,6 +6,7 @@ import UserIcon from "./UserIcon.svelte";
 import ReplaceIcon from "./ReplaceIcon.svelte";
 import ArrowsIcon from "./ArrowsIcon.svelte";
 import XIcon from "./XIcon.svelte";
+import Footer from "./Footer.svelte";
 
 export {
     BlurtList,
@@ -13,6 +14,7 @@ export {
     PersonaManager,
     Blurt,
     UserIcon,
+    Footer,
     ReplaceIcon,
     ArrowsIcon,
     XIcon
