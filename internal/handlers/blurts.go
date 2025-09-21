@@ -11,8 +11,8 @@ const BLURT_COUNT = 100
 
 func (h *DefaultHandler) GetBlurtsHandler(c echo.Context) error {
 	type query_params struct {
-		Offset int `query:"offset"`
-		Count  int `query:"count"`
+		Offset int64 `query:"offset"`
+		Count  int64 `query:"count"`
 	}
 
 	var params query_params

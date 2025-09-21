@@ -1,15 +1,19 @@
 <script lang="ts">
+	import { API_ADDRESS } from "$lib"
+	import mowr from "$lib/assets/mowr.png"
 	import { getBlurtState, type Blurt } from "$lib/blurts.svelte"
 	import { getUserState } from "$lib/users.svelte"
-	import mowr from "$lib/assets/mowr.png"
-	import { API_ADDRESS } from "$lib"
 
+	const blurts = getBlurtState()
+	const users = getUserState()
+
+	let loading_blurts = $state(false)
 	let more_blurts = $state(true)
 
-	const users = getUserState()
-	const blurts = getBlurtState()
-
 	async function get_more_blurts() {
+		if (loading_blurts) return
+
+		loading_blurts = true
 		const res = await fetch(
 			`${API_ADDRESS}/blurts/?offset=${blurts.list.length}&username=${users.active_user}`
 		)
@@ -20,6 +24,8 @@
 		blurts.add_bulk(new_blurts)
 
 		if (new_blurts.length === 0) more_blurts = false
+
+		loading_blurts = false
 	}
 </script>
 

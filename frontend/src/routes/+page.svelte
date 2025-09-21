@@ -9,7 +9,6 @@
 	<div class="flex w-full flex-col gap-4">
 		<NewBlurtForm />
 		<BlurtList />
-
 		<Footer />
 	</div>
 </div>

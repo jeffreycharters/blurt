@@ -37,6 +37,13 @@
 	function setChaos() {
 		chaos.set_chaos(checkbox_chaos)
 	}
+
+	function drawer_key_handler(event: KeyboardEvent) {
+		if (!["Enter", " "].includes(event.key)) return
+
+		event.preventDefault()
+		drawer.toggle()
+	}
 </script>
 
 <div
@@ -47,7 +54,7 @@
 		role="button"
 		tabindex="0"
 		onclick={() => drawer.toggle()}
-		onkeydown={(evt) => ["Enter", " "].includes(evt.key) && drawer.toggle()}
+		onkeydown={drawer_key_handler}
 	>
 		<div class="flex items-baseline gap-1">
 			<UserIcon />
@@ -72,7 +79,11 @@
 	{#if drawer.open}
 		<div class="mb-3 md:mb-0" in:slide={{ duration: 200 }} out:slide={{ duration: 125 }}>
 			<hr class="mx-auto my-1 hidden w-5/6 rounded border border-slate-200 p-0 md:block" />
-			<div class="w-full font-bold text-teal-50 md:text-teal-900">Current Personas</div>
+
+			<div class="flex items-baseline justify-between">
+				<div class="font-bold text-teal-50 md:text-teal-900">Current Personas</div>
+				<div class="text-xs italic text-teal-100 md:text-slate-500">{users.list.length} of 14</div>
+			</div>
 			<ul class="text-slate-600">
 				{#each users.alphabetical_list as user (user)}
 					<li
@@ -113,13 +124,17 @@
 								id="chaos"
 								class="h-4 w-4 rounded-sm text-red-700"
 							/>
-							<label for="chaos" class:font-bold={checkbox_chaos}>Chaos mode</label>
+							<label
+								for="chaos"
+								class="text-teal-50 md:text-slate-900"
+								class:font-bold={checkbox_chaos}>Chaos mode</label
+							>
 						</div>
 
 						<button
 							class="h-8 hover:cursor-pointer"
 							onclick={() => (adding = true)}
-							disabled={users.list.length > 14}>+ add persona</button
+							disabled={users.list.length >= 14}>+ add persona</button
 						>
 					{:else}
 						<form class="flex w-full justify-between" onsubmit={add_user}>
@@ -132,7 +147,7 @@
 									name="add-user"
 									minlength="1"
 									maxlength="14"
-									class="h-8 w-40 rounded border border-slate-200 shadow-md"
+									class="h-8 w-40 rounded border border-slate-200 text-slate-700 shadow-md"
 									autofocus
 								/>
 							</div>
