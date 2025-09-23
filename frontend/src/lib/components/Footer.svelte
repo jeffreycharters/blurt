@@ -5,7 +5,6 @@
 	import { getUserState } from "$lib/users.svelte"
 
 	const blurts = getBlurtState()
-	const users = getUserState()
 
 	let loading_blurts = $state(false)
 	let more_blurts = $state(true)
@@ -13,18 +12,20 @@
 	async function get_more_blurts() {
 		if (loading_blurts) return
 
+		console.log("blurt count", blurts.list.length)
+
 		loading_blurts = true
-		const res = await fetch(
-			`${API_ADDRESS}/blurts/?offset=${blurts.list.length}&username=${users.active_user}`
-		)
+		const res = await fetch(`${API_ADDRESS}/blurts?offset=${blurts.list.length}`)
 
 		if (!res.ok) return console.error(res.status, res.statusText)
 
-		const new_blurts = (await res.json()) as Blurt[]
-		blurts.add_bulk(new_blurts)
+		const new_blurts = (await res.json()) as Blurt[] | null
 
-		if (new_blurts.length === 0) more_blurts = false
+		if (new_blurts) blurts.add_bulk(new_blurts)
 
+		if (!new_blurts) more_blurts = false
+
+		console.log("after blurt count", blurts.list.length)
 		loading_blurts = false
 	}
 </script>

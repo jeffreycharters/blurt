@@ -16,18 +16,23 @@ func (h *DefaultHandler) GetBlurtsHandler(c echo.Context) error {
 	}
 
 	var params query_params
-	_ = c.Bind(&params)
+	err := c.Bind(&params)
+	if err != nil {
+		slog.Info("error binding", "error", err)
+		return err
+	}
 
 	if params.Count == 0 {
 		params.Count = BLURT_COUNT
 	}
 
-	blurts, err := h.db.GetBlurts(params.Offset, BLURT_COUNT)
+	slog.Info("getting blurts", "offset", params.Offset, "count", params.Count)
+
+	blurts, err := h.db.GetBlurts(params.Offset, params.Count)
 	if err != nil {
 		slog.Info("error getting blurts", "error", err)
 		return err
 	}
 
 	return c.JSON(http.StatusOK, blurts)
-
 }

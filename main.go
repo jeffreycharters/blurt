@@ -37,15 +37,8 @@ func main() {
 
 	api := e.Group("/api")
 
-	users := api.Group("/users")
-	users.POST("/:username", h.NewUserHandler)
-	users.GET("/usercount", h.UserCountHandler)
-
 	blurts := api.Group("/blurts")
-	blurts.GET("/", h.GetBlurtsHandler)
-
-	liks := api.Group("/liks")
-	liks.POST("/", h.NewLikHandler)
+	blurts.GET("", h.GetBlurtsHandler)
 
 	log.Fatal(e.Start(":3320"))
 
