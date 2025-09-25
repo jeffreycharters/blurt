@@ -3,6 +3,8 @@ import { browser } from "$app/environment";
 export const API_ADDRESS = build_api_address()
 export const WS_ADDRESS = build_ws_address()
 
+export const BLURT_BATCH_COUNT = 50
+
 
 function build_api_address() {
     if (browser) {

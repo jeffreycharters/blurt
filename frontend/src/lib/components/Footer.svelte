@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { API_ADDRESS } from "$lib"
+	import { API_ADDRESS, BLURT_BATCH_COUNT } from "$lib"
 	import mowr from "$lib/assets/mowr.png"
 	import { getBlurtState, type Blurt } from "$lib/blurts.svelte"
 
@@ -12,14 +12,16 @@
 		if (loading_blurts) return
 
 		loading_blurts = true
-		const res = await fetch(`${API_ADDRESS}/blurts?offset=${blurts.list.length}`)
+		const res = await fetch(
+			`${API_ADDRESS}/blurts?offset=${blurts.list.length}&count=${BLURT_BATCH_COUNT}`
+		)
 
 		if (!res.ok) return console.error(res.status, res.statusText)
 
 		const new_blurts = (await res.json()) as Blurt[] | null
 
 		if (new_blurts) blurts.add_bulk(new_blurts)
-		if (!new_blurts) more_blurts = false
+		if (!new_blurts || new_blurts.length < BLURT_BATCH_COUNT) more_blurts = false
 
 		loading_blurts = false
 	}

@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import type { Blurt } from '$lib/blurts.svelte';
 
-import { API_ADDRESS } from '$lib/index';
+import { API_ADDRESS, BLURT_BATCH_COUNT } from '$lib/index';
 
 export const prerender = true;
 export const trailingSlash = 'always'
@@ -14,7 +14,7 @@ export async function load({ fetch }) {
 	}
 
 	let blurts: Blurt[] = []
-	const res = await fetch(API_ADDRESS + '/blurts?offset=0')
+	const res = await fetch(API_ADDRESS + '/blurts?offset=0&count=' + BLURT_BATCH_COUNT)
 
 	if (res.ok) blurts = await res.json()
 	if (!res.ok) console.error(res.status, res.statusText)
