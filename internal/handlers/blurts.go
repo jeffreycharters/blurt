@@ -26,8 +26,6 @@ func (h *DefaultHandler) GetBlurtsHandler(c echo.Context) error {
 		params.Count = BLURT_COUNT
 	}
 
-	slog.Info("getting blurts", "offset", params.Offset, "count", params.Count)
-
 	blurts, err := h.db.GetBlurts(params.Offset, params.Count)
 	if err != nil {
 		slog.Info("error getting blurts", "error", err)

@@ -39,18 +39,20 @@ func (db *HandlerDB) SetBlurt(username string, blurt string) (*LoadedBlurt, erro
 }
 
 func (db *HandlerDB) GetBlurts(offset int64, count int64) ([]LoadedBlurt, error) {
-	stmt := SELECT(
-		Blurt.ID.AS("loaded_blurt.id"),
-		Blurt.Content.AS("loaded_blurt.content"),
-		Blurt.Created.AS("loaded_blurt.created"),
-		Blurt.Author.AS("loaded_blurt.author"),
-		Lik.Username.AS("loaded_blurt.likkers")).
-		FROM(Blurt.
-			LEFT_JOIN(Lik, Lik.BlurtID.EQ(Blurt.ID)),
-		).
+	selected_blurts := SELECT(Blurt.AllColumns).
+		FROM(Blurt).
 		ORDER_BY(Blurt.Created.DESC()).
 		OFFSET(offset).
-		LIMIT(count)
+		LIMIT(count).
+		AsTable("selected_blurts")
+
+	blurt_id := Blurt.ID.From(selected_blurts)
+
+	stmt := SELECT(
+		selected_blurts.AllColumns().As("loaded_blurt"),
+		Lik.Username.AS("loaded_blurt.likkers")).
+		FROM(selected_blurts.
+			LEFT_JOIN(Lik, Lik.BlurtID.EQ(blurt_id)))
 
 	var blurts []LoadedBlurt
 	err := stmt.Query(db.db, &blurts)
