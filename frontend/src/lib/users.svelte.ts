@@ -46,7 +46,7 @@ export class User {
 
         name = this.trim_name(name)
 
-        this.list = [...this.list, name]
+        this.list = [name, ...this.list]
 
         this.save()
     }
