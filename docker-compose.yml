@@ -1,0 +1,24 @@
+networks:
+  proxy:
+    external: true
+  internal:
+    driver: bridge
+
+services:
+  blurt:
+    build: .
+    container_name: blurt
+    restart: always
+    networks:
+      - internal
+      - proxy
+    ports:
+      - "3320:3320"
+    volumes:
+      - ./home/k/blurt/data:/app/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.blurt.rule=Host(`blurt.sadspiders.ca`)"
+      - "traefik.http.routers.blurt.entrypoints=websecure"
+      - "traefik.http.routers.blurt.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.blurt.middlewares=crowdsec@file"

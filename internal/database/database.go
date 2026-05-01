@@ -12,7 +12,7 @@ type HandlerDB struct {
 }
 
 func Init() *HandlerDB {
-	db, err := sql.Open("sqlite", "./blurt.db")
+	db, err := sql.Open("sqlite", "./data/blurt.db")
 	if err != nil {
 		log.Fatal(err)
 	}
